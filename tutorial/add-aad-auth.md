@@ -13,7 +13,7 @@ Cliquez avec le bouton droit sur le projet du **didacticiel Graph** dans l'Explo
 </appSettings>
 ```
 
-Remplacez `YOUR_APP_ID_HERE` par l'ID de l'application dans le portail d'inscription de `YOUR_APP_PASSWORD_HERE` l'application et remplacez par le mot de passe que vous avez généré. Veillez également à modifier la `PORT` valeur de `ida:RedirectUri` pour qu'elle corresponde à l'URL de votre application.
+Remplacez `YOUR_APP_ID_HERE` par l'ID de l'application dans le portail d'inscription de `YOUR_APP_PASSWORD_HERE` l'application et remplacez par la clé secrète client que vous avez générée. Si votre clé secrète client contient des esperluettes (`&`), veillez à les remplacer par `&amp;` dans `PrivateSettings.config`. Veillez également à modifier la `PORT` valeur de `ida:RedirectUri` pour qu'elle corresponde à l'URL de votre application.
 
 > [!IMPORTANT]
 > Si vous utilisez le contrôle de code source tel que git, il est maintenant recommandé d'exclure le `PrivateSettings.config` fichier du contrôle de code source afin d'éviter une fuite accidentelle de votre ID d'application et de votre mot de passe.
@@ -342,11 +342,6 @@ namespace graph_tutorial.TokenStorage
         private void Persist()
         {
             sessionLock.EnterReadLock();
-
-            // Optimistically set HasStateChanged to false.
-            // We need to do it early to avoid losing changes made by a concurrent thread.
-            tokenCache.HasStateChanged = false;
-
             httpContext.Session[cacheId] = tokenCache.Serialize();
             sessionLock.ExitReadLock();
         }
@@ -362,7 +357,7 @@ namespace graph_tutorial.TokenStorage
         private void AfterAccessNotification(TokenCacheNotificationArgs args)
         {
             // if the access operation resulted in a cache update
-            if (tokenCache.HasStateChanged)
+            if (args.HasStateChanged)
             {
                 Persist();
             }

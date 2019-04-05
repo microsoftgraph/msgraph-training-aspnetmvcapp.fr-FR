@@ -30,14 +30,15 @@ Ce module a été enregistré et est disponible dans le canal YouTube de dévelo
 
 |        Rôles         |                            Auteur (s)                             |
 | -------------------- | ---------------------------------------------------------------- |
-| Manuels/diapositives de l'atelier | Andrew Connell (MVP Microsoft, Voitanos) @andrewconnell          |
-| QA                   | Julie Turner (MVP Microsoft, Sympraxis Consulting) @juliemturner |
-| Commanditaire/support    | Yina (Microsoft) @yinaa                                   |
+| Manuels/diapositives de l'atelier | Andrew Connell (MVP Microsoft, Voitanos)@andrewconnell          |
+| QA                   | Julie Turner (MVP Microsoft, Sympraxis Consulting)@juliemturner |
+| Commanditaire/support    | Yina (Microsoft)@yinaa                                   |
 
 ## <a name="version-history"></a>Historique des versions
 
-| Version |        Date        |                       Commentaires                       |
+| Version |        Date        |                       Comments                       |
 | ------- | ------------------ | ---------------------------------------------------- |
+| 1.7     | 4 avril 2018      | actualisation du contenu 2019Q3                               |
 | 1.6     | 18 décembre 2018  | actualisation du contenu 2019Q2                               |
 | 1,5     | 27 novembre 2018  | Intégré à docs.microsoft.com/graph                |
 | 1.4     | 12 septembre 2018 | actualisation du contenu 2019Q1                               |
