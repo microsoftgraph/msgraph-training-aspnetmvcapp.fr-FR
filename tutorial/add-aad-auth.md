@@ -1,8 +1,8 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-Dans cet exercice, vous allez étendre l'application de l'exercice précédent pour prendre en charge l'authentification avec Azure AD. Cela est nécessaire pour obtenir le jeton d'accès OAuth nécessaire pour appeler Microsoft Graph. Dans cette étape, vous allez intégrer le middleware OWIN et la bibliothèque de [bibliothèque d'authentification Microsoft](https://www.nuget.org/packages/Microsoft.Identity.Client/) dans l'application.
+Dans cet exercice, vous allez étendre l’application de l’exercice précédent pour prendre en charge l’authentification avec Azure AD. Cela est nécessaire pour obtenir le jeton d’accès OAuth nécessaire pour appeler Microsoft Graph. Dans cette étape, vous allez intégrer le middleware OWIN et la bibliothèque de [bibliothèque d’authentification Microsoft](https://www.nuget.org/packages/Microsoft.Identity.Client/) dans l’application.
 
-Cliquez avec le bouton droit sur le projet du **didacticiel Graph** dans l'Explorateur de solutions et choisissez **Ajouter un nouvel élément >...**. Choisissez **fichier de configuration Web**, nommez `PrivateSettings.config` le fichier, puis choisissez **Ajouter**. Remplacez l'ensemble de son contenu par le code suivant.
+Cliquez avec le bouton droit sur le projet du **didacticiel Graph** dans l’Explorateur de solutions et choisissez **Ajouter un nouvel élément >...**. Choisissez **fichier de configuration Web**, nommez `PrivateSettings.config` le fichier, puis choisissez **Ajouter**. Remplacez l'ensemble de son contenu par le code suivant.
 
 ```xml
 <appSettings>
@@ -13,10 +13,10 @@ Cliquez avec le bouton droit sur le projet du **didacticiel Graph** dans l'Explo
 </appSettings>
 ```
 
-Remplacez `YOUR_APP_ID_HERE` par l'ID de l'application dans le portail d'inscription de `YOUR_APP_PASSWORD_HERE` l'application et remplacez par la clé secrète client que vous avez générée. Si votre clé secrète client contient des esperluettes (`&`), veillez à les remplacer par `&amp;` dans `PrivateSettings.config`. Veillez également à modifier la `PORT` valeur de `ida:RedirectUri` pour qu'elle corresponde à l'URL de votre application.
+Remplacez `YOUR_APP_ID_HERE` par l’ID de l’application dans le portail d’inscription de `YOUR_APP_PASSWORD_HERE` l’application et remplacez par la clé secrète client que vous avez générée. Si votre clé secrète client contient des esperluettes (`&`), veillez à les remplacer par `&amp;` dans `PrivateSettings.config`. Veillez également à modifier la `PORT` valeur de `ida:RedirectUri` pour qu’elle corresponde à l’URL de votre application.
 
 > [!IMPORTANT]
-> Si vous utilisez le contrôle de code source tel que git, il est maintenant recommandé d'exclure le `PrivateSettings.config` fichier du contrôle de code source afin d'éviter une fuite accidentelle de votre ID d'application et de votre mot de passe.
+> Si vous utilisez le contrôle de code source tel que git, il est maintenant recommandé d’exclure le `PrivateSettings.config` fichier du contrôle de code source afin d’éviter une fuite accidentelle de votre ID d’application et de votre mot de passe.
 
 Mise `Web.config` à jour pour charger ce nouveau fichier. Remplacez `<appSettings>` (ligne 7) par ce qui suit:
 
@@ -26,7 +26,7 @@ Mise `Web.config` à jour pour charger ce nouveau fichier. Remplacez `<appSettin
 
 ## <a name="implement-sign-in"></a>Mettre en œuvre la connexion
 
-Commencez par initialiser l'intergiciel OWIN pour utiliser l'authentification Azure AD pour l'application. Cliquez avec le bouton droit sur le dossier **App_Start** dans l'Explorateur de solutions et choisissez **Ajouter une classe >.**... Nommez le `Startup.Auth.cs` fichier, puis choisissez **Ajouter**. Remplacez tout le contenu par le code suivant.
+Commencez par initialiser l’intergiciel OWIN pour utiliser l’authentification Azure AD pour l’application. Cliquez avec le bouton droit sur le dossier **App_Start** dans l’Explorateur de solutions et choisissez **Ajouter une classe >.**... Nommez le `Startup.Auth.cs` fichier, puis choisissez **Ajouter**. Remplacez tout le contenu par le code suivant.
 
 ```cs
 using Microsoft.Identity.Client;
@@ -138,7 +138,7 @@ namespace graph_tutorial
 }
 ```
 
-Ce code configure le middleware OWIN avec les valeurs de et définit `PrivateSettings.config` deux méthodes de rappel, `OnAuthenticationFailedAsync` et `OnAuthorizationCodeReceivedAsync`. Ces méthodes de rappel seront appelées lorsque le processus de connexion est renvoyé à partir d'Azure.
+Ce code configure le middleware OWIN avec les valeurs de et définit `PrivateSettings.config` deux méthodes de rappel, `OnAuthenticationFailedAsync` et `OnAuthorizationCodeReceivedAsync`. Ces méthodes de rappel seront appelées lorsque le processus de connexion est renvoyé à partir d’Azure.
 
 À présent, `Startup.cs` mettez à jour le `ConfigureAuth` fichier pour appeler la méthode. Remplacez tout le contenu de `Startup.cs` par le code suivant.
 
@@ -170,7 +170,7 @@ public ActionResult Error(string message, string debug)
 }
 ```
 
-Ajoutez un contrôleur pour gérer la connexion. Cliquez avec le bouton droit sur le dossier **Controllers** dans l'Explorateur de solutions, puis choisissez **Ajouter un contrôleur >..**.. Sélectionnez **contrôleur MVC 5-vide** et choisissez **Ajouter**. Nommez le `AccountController` contrôleur, puis choisissez **Ajouter**. Remplacez tout le contenu du fichier par le code suivant.
+Ajoutez un contrôleur pour gérer la connexion. Cliquez avec le bouton droit sur le dossier **Controllers** dans l’Explorateur de solutions, puis choisissez **Ajouter un contrôleur >..**.. Sélectionnez **contrôleur MVC 5-vide** et choisissez **Ajouter**. Nommez le `AccountController` contrôleur, puis choisissez **Ajouter**. Remplacez tout le contenu du fichier par le code suivant.
 
 ```cs
 using Microsoft.Owin.Security;
@@ -209,13 +209,13 @@ namespace graph_tutorial.Controllers
 }
 ```
 
-Définit une `SignIn` action and `SignOut` . L' `SignIn` action vérifie si la demande est déjà authentifiée. Si ce n'est pas le cas, il appelle le middleware OWIN pour authentifier l'utilisateur. L' `SignOut` action appelle l'intergiciel OWIN pour se déconnecter.
+Définit une `SignIn` action and `SignOut` . L' `SignIn` action vérifie si la demande est déjà authentifiée. Si ce n’est pas le cas, il appelle le middleware OWIN pour authentifier l’utilisateur. L' `SignOut` action appelle l’intergiciel OWIN pour se déconnecter.
 
-Enregistrez vos modifications et démarrez le projet. Cliquez sur le bouton de connexion et vous devez être redirigé vers `https://login.microsoftonline.com`. Connectez-vous avec votre compte Microsoft et acceptez les autorisations demandées. Le navigateur redirige vers l'application en affichant le jeton.
+Enregistrez vos modifications et démarrez le projet. Cliquez sur le bouton de connexion et vous devez être redirigé vers `https://login.microsoftonline.com`. Connectez-vous avec votre compte Microsoft et acceptez les autorisations demandées. Le navigateur redirige vers l’application en affichant le jeton.
 
-### <a name="get-user-details"></a>Obtenir les détails de l'utilisateur
+### <a name="get-user-details"></a>Obtenir les détails de l’utilisateur
 
-Commencez par créer un fichier qui contiendra tous vos appels Microsoft Graph. Cliquez avec le bouton droit sur le dossier **Graph-Tutorial** dans l'Explorateur de solutions, puis choisissez **Ajouter > nouveau dossier**. Nommez le `Helpers`dossier. Cliquez avec le bouton droit sur ce nouveau dossier, puis choisissez **Ajouter une classe >.**... Nommez le `GraphHelper.cs` fichier, puis choisissez **Ajouter**. Remplacez le contenu de ce fichier par le code suivant.
+Commencez par créer un fichier qui contiendra tous vos appels Microsoft Graph. Cliquez avec le bouton droit sur le dossier **Graph-Tutorial** dans l’Explorateur de solutions, puis choisissez **Ajouter > nouveau dossier**. Nommez le `Helpers`dossier. Cliquez avec le bouton droit sur ce nouveau dossier, puis choisissez **Ajouter une classe >.**... Nommez le `GraphHelper.cs` fichier, puis choisissez **Ajouter**. Remplacez le contenu de ce fichier par le code suivant.
 
 ```cs
 using Microsoft.Graph;
@@ -244,7 +244,7 @@ namespace graph_tutorial.Helpers
 
 Cette fonctionnalité implémente `GetUserDetails` la fonction, qui utilise le kit de développement logiciel ( `/me` SDK) Microsoft Graph pour appeler le point de terminaison et renvoyer le résultat.
 
-Mettez à `OnAuthorizationCodeReceivedAsync` jour la `App_Start/Startup.Auth.cs` méthode dans pour appeler cette fonction. Tout d'abord, ajoutez `using` l'instruction suivante en haut du fichier.
+Mettez à `OnAuthorizationCodeReceivedAsync` jour la `App_Start/Startup.Auth.cs` méthode dans pour appeler cette fonction. Tout d’abord, ajoutez `using` l’instruction suivante en haut du fichier.
 
 ```cs
 using graph_tutorial.Helpers;
@@ -270,13 +270,13 @@ try
 }
 ```
 
-Maintenant, si vous enregistrez vos modifications et démarrez l'application, après vous être connecté, vous devriez voir le nom et l'adresse de messagerie de l'utilisateur au lieu du jeton d'accès.
+Maintenant, si vous enregistrez vos modifications et démarrez l’application, après vous être connecté, vous devriez voir le nom et l’adresse de messagerie de l’utilisateur au lieu du jeton d’accès.
 
 ## <a name="storing-the-tokens"></a>Stockage des jetons
 
-Maintenant que vous pouvez obtenir des jetons, il est temps de mettre en œuvre un moyen de les stocker dans l'application. Étant donné qu'il s'agit d'un exemple d'application, nous allons utiliser la session pour stocker les jetons. Une application réelle utiliserait une solution de stockage sécurisé plus fiable, comme une base de données.
+Maintenant que vous pouvez obtenir des jetons, il est temps de mettre en œuvre un moyen de les stocker dans l’application. Étant donné qu’il s’agit d’un exemple d’application, nous allons utiliser la session pour stocker les jetons. Une application réelle utiliserait une solution de stockage sécurisé plus fiable, comme une base de données.
 
-Cliquez avec le bouton droit sur le dossier **Graph-Tutorial** dans l'Explorateur de solutions, puis choisissez **Ajouter > nouveau dossier**. Nommez le `TokenStorage`dossier. Cliquez avec le bouton droit sur ce nouveau dossier, puis choisissez **Ajouter une classe >.**... Nommez le `SessionTokenStore.cs` fichier, puis choisissez **Ajouter**. Remplacez le contenu de ce fichier par le code suivant.
+Cliquez avec le bouton droit sur le dossier **Graph-Tutorial** dans l’Explorateur de solutions, puis choisissez **Ajouter > nouveau dossier**. Nommez le `TokenStorage`dossier. Cliquez avec le bouton droit sur ce nouveau dossier, puis choisissez **Ajouter une classe >.**... Nommez le `SessionTokenStore.cs` fichier, puis choisissez **Ajouter**. Remplacez le contenu de ce fichier par le code suivant.
 
 ```cs
 using Microsoft.Identity.Client;
@@ -381,7 +381,7 @@ namespace graph_tutorial.TokenStorage
 }
 ```
 
-Ce code crée une `SessionTokenStore` classe qui fonctionne avec la classe de `TokenCache` la bibliothèque MSAL. La plus grande partie du code implique la sérialisation et la désérialisation `TokenCache` du vers la session. Elle fournit également une classe et des méthodes pour sérialiser et désérialiser les détails de l'utilisateur dans la session.
+Ce code crée une `SessionTokenStore` classe qui fonctionne avec la classe de `TokenCache` la bibliothèque MSAL. La plus grande partie du code implique la sérialisation et la désérialisation `TokenCache` du vers la session. Elle fournit également une classe et des méthodes pour sérialiser et désérialiser les détails de l’utilisateur dans la session.
 
 À présent, ajoutez l' `using` instruction suivante en haut du `App_Start/Startup.Auth.cs` fichier.
 
@@ -390,7 +390,7 @@ using graph_tutorial.TokenStorage;
 using System.IdentityModel.Claims;
 ```
 
-À présent, `OnAuthorizationCodeReceivedAsync` mettez à jour la fonction pour créer `SessionTokenStore` une instance de la classe et fournissez- `ConfidentialClientApplication` lui le constructeur pour l'objet. Cela entraînera l'utilisation de votre implémentation de cache par MSAL pour le stockage des jetons. Remplacez la fonction `OnAuthorizationCodeReceivedAsync` existante par ce qui suit.
+À présent, `OnAuthorizationCodeReceivedAsync` mettez à jour la fonction pour créer `SessionTokenStore` une instance de la classe et fournissez- `ConfidentialClientApplication` lui le constructeur pour l’objet. Cela entraînera l’utilisation de votre implémentation de cache par MSAL pour le stockage des jetons. Remplacez la fonction `OnAuthorizationCodeReceivedAsync` existante par ce qui suit.
 
 ```cs
 private async Task OnAuthorizationCodeReceivedAsync(AuthorizationCodeReceivedNotification notification)
@@ -439,11 +439,11 @@ private async Task OnAuthorizationCodeReceivedAsync(AuthorizationCodeReceivedNot
 
 Pour résumer les modifications:
 
-- Le code transmet à présent `TokenCache` un objet au constructeur pour `ConfidentialClientApplication`. La bibliothèque MSAL gérera la logique de stockage des jetons et de l'actualiser si nécessaire.
-- Le code transmet maintenant les détails de l'utilisateur obtenus de Microsoft Graph `SessionTokenStore` à l'objet à stocker dans la session.
-- En cas de réussite, le code ne redirige plus, il se contente de le renvoyer. Cela permet au middleware OWIN de terminer le processus d'authentification.
+- Le code transmet à présent `TokenCache` un objet au constructeur pour `ConfidentialClientApplication`. La bibliothèque MSAL gérera la logique de stockage des jetons et de l’actualiser si nécessaire.
+- Le code transmet maintenant les détails de l’utilisateur obtenus de Microsoft Graph `SessionTokenStore` à l’objet à stocker dans la session.
+- En cas de réussite, le code ne redirige plus, il se contente de le renvoyer. Cela permet au middleware OWIN de terminer le processus d’authentification.
 
-Étant donné que le cache de jetons est stocké dans la `SignOut` session, `Controllers/AccountController.cs` mettez à jour l'action dans pour effacer le magasin de jetons avant de vous déconnecter. Tout d'abord, ajoutez `using` l'instruction suivante en haut du fichier.
+Étant donné que le cache de jetons est stocké dans la `SignOut` session, `Controllers/AccountController.cs` mettez à jour l’action dans pour effacer le magasin de jetons avant de vous déconnecter. Tout d’abord, ajoutez `using` l’instruction suivante en haut du fichier.
 
 ```cs
 using graph_tutorial.TokenStorage;
@@ -469,7 +469,7 @@ public ActionResult SignOut()
 }
 ```
 
-Les détails de l'utilisateur mis en cache sont ceux que chaque vue de l'application aura besoin, `BaseController` donc mettez à jour la classe pour charger ces informations à partir de la session. Ouvrez `Controllers/BaseController.cs` et ajoutez les instructions `using` suivantes en haut du fichier.
+Les détails de l’utilisateur mis en cache sont ceux que chaque vue de l’application aura besoin, `BaseController` donc mettez à jour la classe pour charger ces informations à partir de la session. Ouvrez `Controllers/BaseController.cs` et ajoutez les instructions `using` suivantes en haut du fichier.
 
 ```cs
 using graph_tutorial.TokenStorage;
@@ -507,18 +507,18 @@ protected override void OnActionExecuting(ActionExecutingContext filterContext)
 }
 ```
 
-Démarrez le serveur et parcourez le processus de connexion. Vous devez revenir sur la page d'accueil, mais l'interface utilisateur doit changer pour indiquer que vous êtes connecté.
+Démarrez le serveur et parcourez le processus de connexion. Vous devez revenir sur la page d’accueil, mais l’interface utilisateur doit changer pour indiquer que vous êtes connecté.
 
-![Capture d'écran de la page d'accueil après la connexion](./images/add-aad-auth-01.png)
+![Capture d’écran de la page d’accueil après la connexion](./images/add-aad-auth-01.png)
 
-Cliquez sur Avatar de l'utilisateur dans le coin supérieur droit pour **** accéder au lien Déconnexion. Cliquez **** sur Déconnexion pour réinitialiser la session et revenir à la page d'accueil.
+Cliquez sur Avatar de l’utilisateur dans le coin supérieur droit pour **** accéder au lien Déconnexion. Cliquez **** sur Déconnexion pour réinitialiser la session et revenir à la page d’accueil.
 
-![Capture d'écran du menu déroulant avec le lien déConnexion](./images/add-aad-auth-02.png)
+![Capture d’écran du menu déroulant avec le lien Déconnexion](./images/add-aad-auth-02.png)
 
 ## <a name="refreshing-tokens"></a>Actualisation des jetons
 
-À ce stade, votre application a un jeton d'accès, qui est envoyé `Authorization` dans l'en-tête des appels d'API. Il s'agit du jeton qui permet à l'application d'accéder à Microsoft Graph pour le compte de l'utilisateur.
+À ce stade, votre application a un jeton d’accès, qui est envoyé `Authorization` dans l’en-tête des appels d’API. Il s’agit du jeton qui permet à l’application d’accéder à Microsoft Graph pour le compte de l’utilisateur.
 
-Toutefois, ce jeton est éphémère. Le jeton expire une heure après son émission. C'est ici que le jeton d'actualisation devient utile. Le jeton d'actualisation permet à l'application de demander un nouveau jeton d'accès sans demander à l'utilisateur de se reconnecter.
+Toutefois, ce jeton est éphémère. Le jeton expire une heure après son émission. C’est ici que le jeton d’actualisation devient utile. Le jeton d’actualisation permet à l’application de demander un nouveau jeton d’accès sans demander à l’utilisateur de se reconnecter.
 
-Étant donné que l'application utilise la bibliothèque MSAL et `TokenCache` un objet, il n'est pas nécessaire d'implémenter une logique d'actualisation de jeton. La `ConfidentialClientApplication.AcquireTokenSilentAsync` méthode effectue l'ensemble de la logique pour vous. Il vérifie d'abord le jeton mis en cache et, s'il n'a pas expiré, il le renvoie. Si elle a expiré, elle utilise le jeton d'actualisation mis en cache pour en obtenir une nouvelle. Vous utiliserez cette méthode dans le module suivant.
+Étant donné que l’application utilise la bibliothèque MSAL et `TokenCache` un objet, il n’est pas nécessaire d’implémenter une logique d’actualisation de jeton. La `ConfidentialClientApplication.AcquireTokenSilentAsync` méthode effectue l’ensemble de la logique pour vous. Il vérifie d’abord le jeton mis en cache et, s’il n’a pas expiré, il le renvoie. Si elle a expiré, elle utilise le jeton d’actualisation mis en cache pour en obtenir une nouvelle. Vous utiliserez cette méthode dans le module suivant.
