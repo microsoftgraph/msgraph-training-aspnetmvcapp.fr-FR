@@ -43,21 +43,22 @@ private static GraphServiceClient GetAuthenticatedClient()
         new DelegateAuthenticationProvider(
             async (requestMessage) =>
             {
-                // Get the signed in user's id and create a token cache
-                string signedInUserId = ClaimsPrincipal.Current.FindFirst(ClaimTypes.NameIdentifier).Value;
-                SessionTokenStore tokenStore = new SessionTokenStore(signedInUserId,
-                    new HttpContextWrapper(HttpContext.Current));
+                var idClient = ConfidentialClientApplicationBuilder.Create(appId)
+                    .WithRedirectUri(redirectUri)
+                    .WithClientSecret(appSecret)
+                    .Build();
 
-                var idClient = new ConfidentialClientApplication(
-                    appId, redirectUri, new ClientCredential(appSecret),
-                    tokenStore.GetMsalCacheInstance(), null);
+                string signedInUserId = ClaimsPrincipal.Current.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var tokenStore = new SessionTokenStore(signedInUserId, HttpContext.Current);
+                tokenStore.Initialize(idClient.UserTokenCache);
 
                 var accounts = await idClient.GetAccountsAsync();
 
                 // By calling this here, the token can be refreshed
                 // if it's expired right before the Graph call is made
-                var result = await idClient.AcquireTokenSilentAsync(
-                    graphScopes.Split(' '), accounts.FirstOrDefault());
+                var scopes = graphScopes.Split(' ');
+                var result = await idClient.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
+                    .ExecuteAsync();
 
                 requestMessage.Headers.Authorization =
                     new AuthenticationHeaderValue("Bearer", result.AccessToken);
@@ -67,15 +68,16 @@ private static GraphServiceClient GetAuthenticatedClient()
 
 Examinez ce que fait ce code.
 
-- La `GetAuthenticatedClient` fonction Initialise un `GraphServiceClient` avec un fournisseur d’authentification qui appelle `AcquireTokenSilentAsync`.
+- La `GetAuthenticatedClient` fonction Initialise un `GraphServiceClient` avec un fournisseur d’authentification qui appelle `AcquireTokenSilent`.
 - Dans la `GetEventsAsync` fonction:
   - L’URL qui sera appelée est `/v1.0/me/events`.
   - La `Select` fonction limite les champs renvoyés pour chaque événement à ceux que l’affichage utilise réellement.
   - La `OrderBy` fonction trie les résultats en fonction de la date et de l’heure de leur création, avec l’élément le plus récent en premier.
 
-Créez maintenant un contrôleur pour les affichages de calendrier. Cliquez avec le bouton droit sur le dossier **Controllers** dans l’Explorateur de solutions, puis choisissez **Ajouter un contrôleur >..**.. Sélectionnez **contrôleur MVC 5-vide** et choisissez **Ajouter**. Nommez le `CalendarController` contrôleur, puis choisissez **Ajouter**. Remplacez tout le contenu du nouveau fichier par le code suivant.
+Créez maintenant un contrôleur pour les affichages de calendrier. Cliquez avec le bouton droit sur le dossier **Controllers** dans l’Explorateur de solutions et choisissez **Ajouter un contrôleur de >...**. Sélectionnez **contrôleur MVC 5-vide** et choisissez **Ajouter**. Nommez le `CalendarController` contrôleur, puis choisissez **Ajouter**. Remplacez tout le contenu du nouveau fichier par le code suivant.
 
 ```cs
+using System;
 using graph_tutorial.Helpers;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -89,6 +91,16 @@ namespace graph_tutorial.Controllers
         public async Task<ActionResult> Index()
         {
             var events = await GraphHelper.GetEventsAsync();
+
+            // Change start and end dates from UTC to local time
+            foreach (var ev in events)
+            {
+                ev.Start.DateTime = DateTime.Parse(ev.Start.DateTime).ToLocalTime().ToString();
+                ev.Start.TimeZone = TimeZoneInfo.Local.Id;
+                ev.End.DateTime = DateTime.Parse(ev.End.DateTime).ToLocalTime().ToString();
+                ev.End.TimeZone = TimeZoneInfo.Local.Id;
+            }
+
             return Json(events, JsonRequestBehavior.AllowGet);
         }
     }
@@ -99,7 +111,7 @@ namespace graph_tutorial.Controllers
 
 ## <a name="display-the-results"></a>Afficher les résultats
 
-À présent, vous pouvez ajouter une vue pour afficher les résultats de manière plus conviviale. Dans l’Explorateur de solutions, cliquez avec le bouton droit sur le dossier **views/Calendar** , puis choisissez **Add > View..**.. Nommez l' `Index` affichage, puis choisissez **Ajouter**. Remplacez tout le contenu du nouveau fichier par le code suivant.
+À présent, vous pouvez ajouter une vue pour afficher les résultats de manière plus conviviale. Dans l’Explorateur de solutions, cliquez avec le bouton droit sur le dossier **views/Calendar** , puis choisissez **Add > View...**. Nommez l' `Index` affichage, puis choisissez **Ajouter**. Remplacez tout le contenu du nouveau fichier par le code suivant.
 
 ```html
 @model IEnumerable<Microsoft.Graph.Event>
