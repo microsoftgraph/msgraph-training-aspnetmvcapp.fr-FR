@@ -2,7 +2,7 @@
 
 Dans cet exercice, vous allez créer une inscription de l’application Web Azure AD à l’aide du centre d’administration Azure Active Directory.
 
-1. Déterminez l’URL de votre application ASP.NET. Dans l’Explorateur de solutions de Visual Studio, sélectionnez le projet du **didacticiel Graph** . Dans la fenêtre **Propriétés**, trouvez la valeur de l’**URL**. Copiez cette valeur.
+1. Déterminez l’URL SSL de votre application ASP.NET. Dans l’Explorateur de solutions de Visual Studio, sélectionnez le projet du **didacticiel Graph** . Dans la fenêtre **Propriétés** , recherchez la valeur de l' **URL SSL**. Copiez cette valeur.
 
     ![Capture d’écran de la fenêtre Propriétés de Visual Studio](./images/vs-project-url.png)
 

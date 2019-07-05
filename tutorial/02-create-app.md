@@ -1,17 +1,23 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-Ouvrez Visual Studio, puis sélectionnez **fichier > nouveau projet de >**. Dans la boîte de dialogue **nouveau projet** , procédez comme suit:
+Commencez par créer un projet MVC ASP.NET.
 
-1. Sélectionnez **modèles > Web > Visual C#**.
-1. Sélectionnez **application Web ASP.net (.NET Framework)**.
-1. Entrez **un didacticiel** pour le nom du projet.
+1. Ouvrez Visual Studio, puis sélectionnez **créer un nouveau projet**.
 
-    ![Boîte de dialogue créer un nouveau projet dans Visual Studio 2017](./images/vs-new-project-01.png)
+1. Dans la boîte de dialogue **créer un nouveau projet** , choisissez l’option **application Web ASP.net (.NET Framework)** qui utilise C#, puis sélectionnez **suivant**.
+
+    ![Boîte de dialogue créer un nouveau projet dans Visual Studio 2019](./images/vs-create-new-project.png)
+
+1. Entrez `graph-tutorial` dans le champ **nom du projet** , puis sélectionnez **créer**.
+
+    ![Boîte de dialogue Configurer un nouveau projet de Visual Studio 2019](./images/vs-configure-new-project.png)
 
     > [!NOTE]
     > Assurez-vous d’entrer exactement le même nom pour le projet Visual Studio spécifié dans ces instructions d’atelier. Le nom du projet Visual Studio devient partie intégrante de l’espace de noms dans le code. Le code à l’intérieur de ces instructions dépend de l’espace de noms correspondant au nom de projet Visual Studio spécifié dans ces instructions. Si vous utilisez un nom de projet différent, le code n’est pas compilé, sauf si vous ajustez tous les espaces de noms pour qu’ils correspondent au nom de projet Visual Studio que vous entrez lors de la création du projet.
 
-1. Sélectionnez **OK**. Dans la boîte de dialogue **nouveau projet d’application Web ASP.net** , sélectionnez **MVC** (sous **ASP.net modèles de 4.7.2**), puis cliquez sur **OK**.
+1. Choisissez **MVC** et sélectionnez **créer**.
+
+    ![Visual Studio 2019 créer une nouvelle boîte de dialogue d’application Web ASP.NET](./images/vs-create-new-asp-app.png)
 
 1. Appuyez sur **F5** ou sélectionnez déboguer **> démarrer**le débogage. Si tout fonctionne, votre navigateur par défaut doit ouvrir et afficher une page ASP.NET par défaut.
 
@@ -33,7 +39,7 @@ Avant de poursuivre, mettez à `bootstrap` jour le package NuGet et installez de
     Install-Package Microsoft.Owin.Host.SystemWeb
     Install-Package Microsoft.Owin.Security.OpenIdConnect
     Install-Package Microsoft.Owin.Security.Cookies
-    Install-Package Microsoft.Identity.Client -Version 3.0.8
+    Install-Package Microsoft.Identity.Client -Version 4.0.0
     Install-Package Microsoft.Graph -Version 1.15.0
     ```
 
@@ -43,11 +49,12 @@ Dans cette section, vous allez créer la structure de base de l’application.
 
 1. Créer une classe de démarrage OWIN de base. Cliquez avec le bouton `graph-tutorial` droit sur le dossier dans l’Explorateur de solutions et sélectionnez **Ajouter > nouvel élément**. Choisissez le modèle de **classe de démarrage OWIN** , nommez le fichier `Startup.cs`, puis sélectionnez **Ajouter**.
 
-1. Cliquez avec le bouton **** droit sur le dossier Models dans l’Explorateur de solutions et sélectionnez **Ajouter une > classe...**. Nommez la `Alert` classe et sélectionnez **Ajouter**. Ajoutez le code suivant dans `Alert.cs`. Vous utiliserez cette classe pour flasher les messages d’erreur dans les affichages de l’application.
+1. Cliquez avec le bouton **** droit sur le dossier Models dans l’Explorateur de solutions et sélectionnez **Ajouter une > classe...**. Nommez la `Alert` classe et sélectionnez **Ajouter**. Remplacez tout le contenu de `Alert.cs` par le code suivant.
 
     ```cs
     namespace graph_tutorial.Models
     {
+        // Used to flash error messages in the app's views.
         public class Alert
         {
             public const string AlertKey = "TempDataAlerts";
@@ -160,7 +167,8 @@ Dans cette section, vous allez créer la structure de base de l’application.
     </html>
     ```
 
-    Ce code ajoute [bootstrap](https://getbootstrap.com/) pour les styles simples et [font Isard](https://fontawesome.com/) pour certaines icônes simples. Il définit également une disposition globale avec une barre de navigation et utilise la `Alert` classe pour afficher les alertes.
+    > [!NOTE]
+    > Ce code ajoute [bootstrap](https://getbootstrap.com/) pour les styles simples et [font Isard](https://fontawesome.com/) pour certaines icônes simples. Il définit également une disposition globale avec une barre de navigation et utilise la `Alert` classe pour afficher les alertes.
 
 1. Ouvrez `Content/Site.css` et remplacez l’intégralité de son contenu par le code suivant.
 
@@ -226,8 +234,6 @@ Dans cette section, vous allez créer la structure de base de l’application.
         }
     }
     ```
-
-    Tout contrôleur peut hériter de cette classe de contrôleur de base pour accéder `Flash` à la fonction. Mettez à `HomeController` jour la classe à `BaseController`partir de laquelle hériter.
 
 1. Ouvrez `Controllers/HomeController.cs` et modifiez la `public class HomeController : Controller` ligne comme suit:
 
