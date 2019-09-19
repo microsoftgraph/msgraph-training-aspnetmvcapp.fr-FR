@@ -1,8 +1,8 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-<span data-ttu-id="f8a60-101">Dans cet exercice, vous allez étendre l’application de l’exercice précédent pour prendre en charge l’authentification avec Azure AD.</span><span class="sxs-lookup"><span data-stu-id="f8a60-101">In this exercise you will extend the application from the previous exercise to support authentication with Azure AD.</span></span> <span data-ttu-id="f8a60-102">Cela est nécessaire pour obtenir le jeton d’accès OAuth nécessaire pour appeler l’API Microsoft Graph.</span><span class="sxs-lookup"><span data-stu-id="f8a60-102">This is required to obtain the necessary OAuth access token to call the Microsoft Graph API.</span></span> <span data-ttu-id="f8a60-103">Dans cette étape, vous allez intégrer le middleware OWIN et la bibliothèque de [bibliothèque d’authentification Microsoft](https://www.nuget.org/packages/Microsoft.Identity.Client/) dans l’application.</span><span class="sxs-lookup"><span data-stu-id="f8a60-103">In this step you will integrate the OWIN middleware and the [Microsoft Authentication Library](https://www.nuget.org/packages/Microsoft.Identity.Client/) library into the application.</span></span>
+<span data-ttu-id="e17d5-101">Dans cet exercice, vous allez étendre l’application de l’exercice précédent pour prendre en charge l’authentification avec Azure AD.</span><span class="sxs-lookup"><span data-stu-id="e17d5-101">In this exercise you will extend the application from the previous exercise to support authentication with Azure AD.</span></span> <span data-ttu-id="e17d5-102">Cela est nécessaire pour obtenir le jeton d’accès OAuth nécessaire pour appeler l’API Microsoft Graph.</span><span class="sxs-lookup"><span data-stu-id="e17d5-102">This is required to obtain the necessary OAuth access token to call the Microsoft Graph API.</span></span> <span data-ttu-id="e17d5-103">Dans cette étape, vous allez intégrer le middleware OWIN et la bibliothèque de [bibliothèque d’authentification Microsoft](https://www.nuget.org/packages/Microsoft.Identity.Client/) dans l’application.</span><span class="sxs-lookup"><span data-stu-id="e17d5-103">In this step you will integrate the OWIN middleware and the [Microsoft Authentication Library](https://www.nuget.org/packages/Microsoft.Identity.Client/) library into the application.</span></span>
 
-1. <span data-ttu-id="f8a60-104">Cliquez avec le bouton droit sur le projet du **didacticiel Graph** dans l’Explorateur de solutions et sélectionnez **Ajouter > nouvel élément...**. Choisissez **fichier de configuration Web**, nommez `PrivateSettings.config` le fichier, puis sélectionnez **Ajouter**.</span><span class="sxs-lookup"><span data-stu-id="f8a60-104">Right-click the **graph-tutorial** project in Solution Explorer and select **Add > New Item...**. Choose **Web Configuration File**, name the file `PrivateSettings.config` and select **Add**.</span></span> <span data-ttu-id="f8a60-105">Remplacez l'ensemble de son contenu par le code suivant.</span><span class="sxs-lookup"><span data-stu-id="f8a60-105">Replace its entire contents with the following code.</span></span>
+1. <span data-ttu-id="e17d5-104">Cliquez avec le bouton droit sur le projet du **didacticiel Graph** dans l’Explorateur de solutions et sélectionnez **Ajouter > nouvel élément...**. Choisissez **fichier de configuration Web**, nommez `PrivateSettings.config` le fichier, puis sélectionnez **Ajouter**.</span><span class="sxs-lookup"><span data-stu-id="e17d5-104">Right-click the **graph-tutorial** project in Solution Explorer and select **Add > New Item...**. Choose **Web Configuration File**, name the file `PrivateSettings.config` and select **Add**.</span></span> <span data-ttu-id="e17d5-105">Remplacez l'ensemble de son contenu par le code suivant.</span><span class="sxs-lookup"><span data-stu-id="e17d5-105">Replace its entire contents with the following code.</span></span>
 
     ```xml
     <appSettings>
@@ -13,22 +13,22 @@
     </appSettings>
     ```
 
-    <span data-ttu-id="f8a60-106">Remplacez `YOUR_APP_ID_HERE` par l’ID de l’application dans le portail d’inscription de `YOUR_APP_PASSWORD_HERE` l’application et remplacez par la clé secrète client que vous avez générée.</span><span class="sxs-lookup"><span data-stu-id="f8a60-106">Replace `YOUR_APP_ID_HERE` with the application ID from the Application Registration Portal, and replace `YOUR_APP_PASSWORD_HERE` with the client secret you generated.</span></span> <span data-ttu-id="f8a60-107">Si votre clé secrète client contient des esperluettes (`&`), veillez à les remplacer par `&amp;` dans `PrivateSettings.config`.</span><span class="sxs-lookup"><span data-stu-id="f8a60-107">If your client secret contains any ampersands (`&`), be sure to replace them with `&amp;` in `PrivateSettings.config`.</span></span> <span data-ttu-id="f8a60-108">Veillez également à modifier la `PORT` valeur de `ida:RedirectUri` pour qu’elle corresponde à l’URL de votre application.</span><span class="sxs-lookup"><span data-stu-id="f8a60-108">Also be sure to modify the `PORT` value for the `ida:RedirectUri` to match your application's URL.</span></span>
+    <span data-ttu-id="e17d5-106">Remplacez `YOUR_APP_ID_HERE` par l’ID de l’application dans le portail d’inscription de `YOUR_APP_PASSWORD_HERE` l’application et remplacez par la clé secrète client que vous avez générée.</span><span class="sxs-lookup"><span data-stu-id="e17d5-106">Replace `YOUR_APP_ID_HERE` with the application ID from the Application Registration Portal, and replace `YOUR_APP_PASSWORD_HERE` with the client secret you generated.</span></span> <span data-ttu-id="e17d5-107">Si votre clé secrète client contient des esperluettes (`&`), veillez à les remplacer par `&amp;` dans `PrivateSettings.config`.</span><span class="sxs-lookup"><span data-stu-id="e17d5-107">If your client secret contains any ampersands (`&`), be sure to replace them with `&amp;` in `PrivateSettings.config`.</span></span> <span data-ttu-id="e17d5-108">Veillez également à modifier la `PORT` valeur de `ida:RedirectUri` pour qu’elle corresponde à l’URL de votre application.</span><span class="sxs-lookup"><span data-stu-id="e17d5-108">Also be sure to modify the `PORT` value for the `ida:RedirectUri` to match your application's URL.</span></span>
 
     > [!IMPORTANT]
-    > <span data-ttu-id="f8a60-109">Si vous utilisez le contrôle de code source tel que git, il est maintenant recommandé d’exclure le `PrivateSettings.config` fichier du contrôle de code source afin d’éviter une fuite accidentelle de votre ID d’application et de votre mot de passe.</span><span class="sxs-lookup"><span data-stu-id="f8a60-109">If you're using source control such as git, now would be a good time to exclude the `PrivateSettings.config` file from source control to avoid inadvertently leaking your app ID and password.</span></span>
+    > <span data-ttu-id="e17d5-109">Si vous utilisez le contrôle de code source tel que git, il est maintenant recommandé d’exclure le `PrivateSettings.config` fichier du contrôle de code source afin d’éviter une fuite accidentelle de votre ID d’application et de votre mot de passe.</span><span class="sxs-lookup"><span data-stu-id="e17d5-109">If you're using source control such as git, now would be a good time to exclude the `PrivateSettings.config` file from source control to avoid inadvertently leaking your app ID and password.</span></span>
 
-1. <span data-ttu-id="f8a60-110">Mise `Web.config` à jour pour charger ce nouveau fichier.</span><span class="sxs-lookup"><span data-stu-id="f8a60-110">Update `Web.config` to load this new file.</span></span> <span data-ttu-id="f8a60-111">Remplacez `<appSettings>` (ligne 7) par ce qui suit:</span><span class="sxs-lookup"><span data-stu-id="f8a60-111">Replace the `<appSettings>` (line 7) with the following</span></span>
+1. <span data-ttu-id="e17d5-110">Mise `Web.config` à jour pour charger ce nouveau fichier.</span><span class="sxs-lookup"><span data-stu-id="e17d5-110">Update `Web.config` to load this new file.</span></span> <span data-ttu-id="e17d5-111">Remplacez `<appSettings>` (ligne 7) par ce qui suit :</span><span class="sxs-lookup"><span data-stu-id="e17d5-111">Replace the `<appSettings>` (line 7) with the following</span></span>
 
     ```xml
     <appSettings file="PrivateSettings.config">
     ```
 
-## <a name="implement-sign-in"></a><span data-ttu-id="f8a60-112">Mettre en œuvre la connexion</span><span class="sxs-lookup"><span data-stu-id="f8a60-112">Implement sign-in</span></span>
+## <a name="implement-sign-in"></a><span data-ttu-id="e17d5-112">Mettre en œuvre la connexion</span><span class="sxs-lookup"><span data-stu-id="e17d5-112">Implement sign-in</span></span>
 
-<span data-ttu-id="f8a60-113">Commencez par initialiser l’intergiciel OWIN pour utiliser l’authentification Azure AD pour l’application.</span><span class="sxs-lookup"><span data-stu-id="f8a60-113">Start by initializing the OWIN middleware to use Azure AD authentication for the app.</span></span>
+<span data-ttu-id="e17d5-113">Commencez par initialiser l’intergiciel OWIN pour utiliser l’authentification Azure AD pour l’application.</span><span class="sxs-lookup"><span data-stu-id="e17d5-113">Start by initializing the OWIN middleware to use Azure AD authentication for the app.</span></span>
 
-1. <span data-ttu-id="f8a60-114">Cliquez avec le bouton droit sur le dossier **App_Start** dans l’Explorateur de solutions et sélectionnez **Ajouter une > classe...**. Nommez le `Startup.Auth.cs` fichier, puis sélectionnez **Ajouter**.</span><span class="sxs-lookup"><span data-stu-id="f8a60-114">Right-click the **App_Start** folder in Solution Explorer and select **Add > Class...**. Name the file `Startup.Auth.cs` and select **Add**.</span></span> <span data-ttu-id="f8a60-115">Remplacez tout le contenu par le code suivant.</span><span class="sxs-lookup"><span data-stu-id="f8a60-115">Replace the entire contents with the following code.</span></span>
+1. <span data-ttu-id="e17d5-114">Cliquez avec le bouton droit sur le dossier **App_Start** dans l’Explorateur de solutions et sélectionnez **Ajouter une > classe...**. Nommez le `Startup.Auth.cs` fichier, puis sélectionnez **Ajouter**.</span><span class="sxs-lookup"><span data-stu-id="e17d5-114">Right-click the **App_Start** folder in Solution Explorer and select **Add > Class...**. Name the file `Startup.Auth.cs` and select **Add**.</span></span> <span data-ttu-id="e17d5-115">Remplacez tout le contenu par le code suivant.</span><span class="sxs-lookup"><span data-stu-id="e17d5-115">Replace the entire contents with the following code.</span></span>
 
     ```cs
     using Microsoft.Identity.Client;
@@ -60,39 +60,39 @@
                 app.UseCookieAuthentication(new CookieAuthenticationOptions());
 
                 app.UseOpenIdConnectAuthentication(
-                  new OpenIdConnectAuthenticationOptions
-                  {
-                      ClientId = appId,
-                      Authority = "https://login.microsoftonline.com/common/v2.0",
-                      Scope = $"openid email profile offline_access {graphScopes}",
-                      RedirectUri = redirectUri,
-                      PostLogoutRedirectUri = redirectUri,
-                      TokenValidationParameters = new TokenValidationParameters
-                      {
-                          // For demo purposes only, see below
-                          ValidateIssuer = false
+                    new OpenIdConnectAuthenticationOptions
+                    {
+                        ClientId = appId,
+                        Authority = "https://login.microsoftonline.com/common/v2.0",
+                        Scope = $"openid email profile offline_access {graphScopes}",
+                        RedirectUri = redirectUri,
+                        PostLogoutRedirectUri = redirectUri,
+                        TokenValidationParameters = new TokenValidationParameters
+                        {
+                            // For demo purposes only, see below
+                            ValidateIssuer = false
 
-                          // In a real multi-tenant app, you would add logic to determine whether the
-                          // issuer was from an authorized tenant
-                          //ValidateIssuer = true,
-                          //IssuerValidator = (issuer, token, tvp) =>
-                          //{
-                          //  if (MyCustomTenantValidation(issuer))
-                          //  {
-                          //    return issuer;
-                          //  }
-                          //  else
-                          //  {
-                          //    throw new SecurityTokenInvalidIssuerException("Invalid issuer");
-                          //  }
-                          //}
-                      },
-                      Notifications = new OpenIdConnectAuthenticationNotifications
-                      {
-                          AuthenticationFailed = OnAuthenticationFailedAsync,
-                          AuthorizationCodeReceived = OnAuthorizationCodeReceivedAsync
-                      }
-                  }
+                            // In a real multi-tenant app, you would add logic to determine whether the
+                            // issuer was from an authorized tenant
+                            //ValidateIssuer = true,
+                            //IssuerValidator = (issuer, token, tvp) =>
+                            //{
+                            //  if (MyCustomTenantValidation(issuer))
+                            //  {
+                            //    return issuer;
+                            //  }
+                            //  else
+                            //  {
+                            //    throw new SecurityTokenInvalidIssuerException("Invalid issuer");
+                            //  }
+                            //}
+                        },
+                        Notifications = new OpenIdConnectAuthenticationNotifications
+                        {
+                            AuthenticationFailed = OnAuthenticationFailedAsync,
+                            AuthorizationCodeReceived = OnAuthorizationCodeReceivedAsync
+                        }
+                    }
                 );
             }
 
@@ -143,9 +143,9 @@
     ```
 
     > [!NOTE]
-    > <span data-ttu-id="f8a60-116">Ce code configure le middleware OWIN avec les valeurs de et définit `PrivateSettings.config` deux méthodes de rappel, `OnAuthenticationFailedAsync` et `OnAuthorizationCodeReceivedAsync`.</span><span class="sxs-lookup"><span data-stu-id="f8a60-116">This code configures the OWIN middleware with the values from `PrivateSettings.config` and defines two callback methods, `OnAuthenticationFailedAsync` and `OnAuthorizationCodeReceivedAsync`.</span></span> <span data-ttu-id="f8a60-117">Ces méthodes de rappel seront appelées lorsque le processus de connexion est renvoyé à partir d’Azure.</span><span class="sxs-lookup"><span data-stu-id="f8a60-117">These callback methods will be invoked when the sign-in process returns from Azure.</span></span>
+    > <span data-ttu-id="e17d5-116">Ce code configure le middleware OWIN avec les valeurs de et définit `PrivateSettings.config` deux méthodes de rappel, `OnAuthenticationFailedAsync` et `OnAuthorizationCodeReceivedAsync`.</span><span class="sxs-lookup"><span data-stu-id="e17d5-116">This code configures the OWIN middleware with the values from `PrivateSettings.config` and defines two callback methods, `OnAuthenticationFailedAsync` and `OnAuthorizationCodeReceivedAsync`.</span></span> <span data-ttu-id="e17d5-117">Ces méthodes de rappel seront appelées lorsque le processus de connexion est renvoyé à partir d’Azure.</span><span class="sxs-lookup"><span data-stu-id="e17d5-117">These callback methods will be invoked when the sign-in process returns from Azure.</span></span>
 
-1. <span data-ttu-id="f8a60-118">À présent, `Startup.cs` mettez à jour le `ConfigureAuth` fichier pour appeler la méthode.</span><span class="sxs-lookup"><span data-stu-id="f8a60-118">Now update the `Startup.cs` file to call the `ConfigureAuth` method.</span></span> <span data-ttu-id="f8a60-119">Remplacez tout le contenu de `Startup.cs` par le code suivant.</span><span class="sxs-lookup"><span data-stu-id="f8a60-119">Replace the entire contents of `Startup.cs` with the following code.</span></span>
+1. <span data-ttu-id="e17d5-118">À présent, `Startup.cs` mettez à jour le `ConfigureAuth` fichier pour appeler la méthode.</span><span class="sxs-lookup"><span data-stu-id="e17d5-118">Now update the `Startup.cs` file to call the `ConfigureAuth` method.</span></span> <span data-ttu-id="e17d5-119">Remplacez tout le contenu de `Startup.cs` par le code suivant.</span><span class="sxs-lookup"><span data-stu-id="e17d5-119">Replace the entire contents of `Startup.cs` with the following code.</span></span>
 
     ```cs
     using Microsoft.Owin;
@@ -165,7 +165,7 @@
     }
     ```
 
-1. <span data-ttu-id="f8a60-120">Ajoutez une `Error` action à la `HomeController` classe pour transformer les `message` paramètres `debug` de requête et en `Alert` un objet.</span><span class="sxs-lookup"><span data-stu-id="f8a60-120">Add an `Error` action to the `HomeController` class to transform the `message` and `debug` query parameters into an `Alert` object.</span></span> <span data-ttu-id="f8a60-121">Ouvrez `Controllers/HomeController.cs` et ajoutez la fonction suivante.</span><span class="sxs-lookup"><span data-stu-id="f8a60-121">Open `Controllers/HomeController.cs` and add the following function.</span></span>
+1. <span data-ttu-id="e17d5-120">Ajoutez une `Error` action à la `HomeController` classe pour transformer les `message` paramètres `debug` de requête et en `Alert` un objet.</span><span class="sxs-lookup"><span data-stu-id="e17d5-120">Add an `Error` action to the `HomeController` class to transform the `message` and `debug` query parameters into an `Alert` object.</span></span> <span data-ttu-id="e17d5-121">Ouvrez `Controllers/HomeController.cs` et ajoutez la fonction suivante.</span><span class="sxs-lookup"><span data-stu-id="e17d5-121">Open `Controllers/HomeController.cs` and add the following function.</span></span>
 
     ```cs
     public ActionResult Error(string message, string debug)
@@ -175,7 +175,7 @@
     }
     ```
 
-1. <span data-ttu-id="f8a60-122">Ajoutez un contrôleur pour gérer la connexion.</span><span class="sxs-lookup"><span data-stu-id="f8a60-122">Add a controller to handle sign-in.</span></span> <span data-ttu-id="f8a60-123">Cliquez avec le bouton droit sur le dossier **Controllers** dans l’Explorateur de solutions et sélectionnez **Ajouter un contrôleur de >...**. Sélectionnez **contrôleur MVC 5-vide** et sélectionnez **Ajouter**.</span><span class="sxs-lookup"><span data-stu-id="f8a60-123">Right-click the **Controllers** folder in Solution Explorer and select **Add > Controller...**. Choose **MVC 5 Controller - Empty** and select **Add**.</span></span> <span data-ttu-id="f8a60-124">Nommez le `AccountController` contrôleur et sélectionnez **Ajouter**.</span><span class="sxs-lookup"><span data-stu-id="f8a60-124">Name the controller `AccountController` and select **Add**.</span></span> <span data-ttu-id="f8a60-125">Remplacez tout le contenu du fichier par le code suivant.</span><span class="sxs-lookup"><span data-stu-id="f8a60-125">Replace the entire contents of the file with the following code.</span></span>
+1. <span data-ttu-id="e17d5-122">Ajoutez un contrôleur pour gérer la connexion.</span><span class="sxs-lookup"><span data-stu-id="e17d5-122">Add a controller to handle sign-in.</span></span> <span data-ttu-id="e17d5-123">Cliquez avec le bouton droit sur le dossier **Controllers** dans l’Explorateur de solutions et sélectionnez **Ajouter un contrôleur de >...**. Sélectionnez **contrôleur MVC 5-vide** et sélectionnez **Ajouter**.</span><span class="sxs-lookup"><span data-stu-id="e17d5-123">Right-click the **Controllers** folder in Solution Explorer and select **Add > Controller...**. Choose **MVC 5 Controller - Empty** and select **Add**.</span></span> <span data-ttu-id="e17d5-124">Nommez le `AccountController` contrôleur et sélectionnez **Ajouter**.</span><span class="sxs-lookup"><span data-stu-id="e17d5-124">Name the controller `AccountController` and select **Add**.</span></span> <span data-ttu-id="e17d5-125">Remplacez tout le contenu du fichier par le code suivant.</span><span class="sxs-lookup"><span data-stu-id="e17d5-125">Replace the entire contents of the file with the following code.</span></span>
 
     ```cs
     using Microsoft.Owin.Security;
@@ -214,17 +214,17 @@
     }
     ```
 
-    <span data-ttu-id="f8a60-126">Définit une `SignIn` action and `SignOut` .</span><span class="sxs-lookup"><span data-stu-id="f8a60-126">This defines a `SignIn` and `SignOut` action.</span></span> <span data-ttu-id="f8a60-127">L' `SignIn` action vérifie si la demande est déjà authentifiée.</span><span class="sxs-lookup"><span data-stu-id="f8a60-127">The `SignIn` action checks if the request is already authenticated.</span></span> <span data-ttu-id="f8a60-128">Si ce n’est pas le cas, il appelle le middleware OWIN pour authentifier l’utilisateur.</span><span class="sxs-lookup"><span data-stu-id="f8a60-128">If not, it invokes the OWIN middleware to authenticate the user.</span></span> <span data-ttu-id="f8a60-129">L' `SignOut` action appelle l’intergiciel OWIN pour se déconnecter.</span><span class="sxs-lookup"><span data-stu-id="f8a60-129">The `SignOut` action invokes the OWIN middleware to sign out.</span></span>
+    <span data-ttu-id="e17d5-126">Définit une `SignIn` action and `SignOut` .</span><span class="sxs-lookup"><span data-stu-id="e17d5-126">This defines a `SignIn` and `SignOut` action.</span></span> <span data-ttu-id="e17d5-127">L' `SignIn` action vérifie si la demande est déjà authentifiée.</span><span class="sxs-lookup"><span data-stu-id="e17d5-127">The `SignIn` action checks if the request is already authenticated.</span></span> <span data-ttu-id="e17d5-128">Si ce n’est pas le cas, il appelle le middleware OWIN pour authentifier l’utilisateur.</span><span class="sxs-lookup"><span data-stu-id="e17d5-128">If not, it invokes the OWIN middleware to authenticate the user.</span></span> <span data-ttu-id="e17d5-129">L' `SignOut` action appelle l’intergiciel OWIN pour se déconnecter.</span><span class="sxs-lookup"><span data-stu-id="e17d5-129">The `SignOut` action invokes the OWIN middleware to sign out.</span></span>
 
-1. <span data-ttu-id="f8a60-130">Enregistrez vos modifications et démarrez le projet.</span><span class="sxs-lookup"><span data-stu-id="f8a60-130">Save your changes and start the project.</span></span> <span data-ttu-id="f8a60-131">Cliquez sur le bouton de connexion et vous devez être redirigé vers `https://login.microsoftonline.com`.</span><span class="sxs-lookup"><span data-stu-id="f8a60-131">Click the sign-in button and you should be redirected to `https://login.microsoftonline.com`.</span></span> <span data-ttu-id="f8a60-132">Connectez-vous avec votre compte Microsoft et acceptez les autorisations demandées.</span><span class="sxs-lookup"><span data-stu-id="f8a60-132">Login with your Microsoft account and consent to the requested permissions.</span></span> <span data-ttu-id="f8a60-133">Le navigateur redirige vers l’application en affichant le jeton.</span><span class="sxs-lookup"><span data-stu-id="f8a60-133">The browser redirects to the app, showing the token.</span></span>
+1. <span data-ttu-id="e17d5-130">Enregistrez vos modifications et démarrez le projet.</span><span class="sxs-lookup"><span data-stu-id="e17d5-130">Save your changes and start the project.</span></span> <span data-ttu-id="e17d5-131">Cliquez sur le bouton de connexion et vous devez être redirigé vers `https://login.microsoftonline.com`.</span><span class="sxs-lookup"><span data-stu-id="e17d5-131">Click the sign-in button and you should be redirected to `https://login.microsoftonline.com`.</span></span> <span data-ttu-id="e17d5-132">Connectez-vous avec votre compte Microsoft et acceptez les autorisations demandées.</span><span class="sxs-lookup"><span data-stu-id="e17d5-132">Login with your Microsoft account and consent to the requested permissions.</span></span> <span data-ttu-id="e17d5-133">Le navigateur redirige vers l’application en affichant le jeton.</span><span class="sxs-lookup"><span data-stu-id="e17d5-133">The browser redirects to the app, showing the token.</span></span>
 
-### <a name="get-user-details"></a><span data-ttu-id="f8a60-134">Obtenir les détails de l’utilisateur</span><span class="sxs-lookup"><span data-stu-id="f8a60-134">Get user details</span></span>
+### <a name="get-user-details"></a><span data-ttu-id="e17d5-134">Obtenir les détails de l’utilisateur</span><span class="sxs-lookup"><span data-stu-id="e17d5-134">Get user details</span></span>
 
-<span data-ttu-id="f8a60-135">Une fois que l’utilisateur est connecté, vous pouvez obtenir ses informations à partir de Microsoft Graph.</span><span class="sxs-lookup"><span data-stu-id="f8a60-135">Once the user is logged in, you can get their information from Microsoft Graph.</span></span>
+<span data-ttu-id="e17d5-135">Une fois que l’utilisateur est connecté, vous pouvez obtenir ses informations à partir de Microsoft Graph.</span><span class="sxs-lookup"><span data-stu-id="e17d5-135">Once the user is logged in, you can get their information from Microsoft Graph.</span></span>
 
-1. <span data-ttu-id="f8a60-136">Cliquez avec le bouton droit sur le dossier **Graph-Tutorial** dans l’Explorateur de solutions, puis sélectionnez **Ajouter > nouveau dossier**.</span><span class="sxs-lookup"><span data-stu-id="f8a60-136">Right-click the **graph-tutorial** folder in Solution Explorer, and select **Add > New Folder**.</span></span> <span data-ttu-id="f8a60-137">Nommez le `Helpers`dossier.</span><span class="sxs-lookup"><span data-stu-id="f8a60-137">Name the folder `Helpers`.</span></span>
+1. <span data-ttu-id="e17d5-136">Cliquez avec le bouton droit sur le dossier **Graph-Tutorial** dans l’Explorateur de solutions, puis sélectionnez **Ajouter > nouveau dossier**.</span><span class="sxs-lookup"><span data-stu-id="e17d5-136">Right-click the **graph-tutorial** folder in Solution Explorer, and select **Add > New Folder**.</span></span> <span data-ttu-id="e17d5-137">Nommez le `Helpers`dossier.</span><span class="sxs-lookup"><span data-stu-id="e17d5-137">Name the folder `Helpers`.</span></span>
 
-1. <span data-ttu-id="f8a60-138">Cliquez avec le bouton droit sur ce nouveau dossier, puis sélectionnez **Ajouter une classe de >.**... Nommez le `GraphHelper.cs` fichier, puis sélectionnez **Ajouter**.</span><span class="sxs-lookup"><span data-stu-id="f8a60-138">Right click this new folder and select **Add > Class...**. Name the file `GraphHelper.cs` and select **Add**.</span></span> <span data-ttu-id="f8a60-139">Remplacez le contenu de ce fichier par le code suivant.</span><span class="sxs-lookup"><span data-stu-id="f8a60-139">Replace the contents of this file with the following code.</span></span>
+1. <span data-ttu-id="e17d5-138">Cliquez avec le bouton droit sur ce nouveau dossier, puis sélectionnez **Ajouter une classe de >.**... Nommez le `GraphHelper.cs` fichier, puis sélectionnez **Ajouter**.</span><span class="sxs-lookup"><span data-stu-id="e17d5-138">Right click this new folder and select **Add > Class...**. Name the file `GraphHelper.cs` and select **Add**.</span></span> <span data-ttu-id="e17d5-139">Remplacez le contenu de ce fichier par le code suivant.</span><span class="sxs-lookup"><span data-stu-id="e17d5-139">Replace the contents of this file with the following code.</span></span>
 
     ```cs
     using Microsoft.Graph;
@@ -251,15 +251,15 @@
     }
     ```
 
-    <span data-ttu-id="f8a60-140">Cette fonctionnalité implémente `GetUserDetails` la fonction, qui utilise le kit de développement logiciel ( `/me` SDK) Microsoft Graph pour appeler le point de terminaison et renvoyer le résultat.</span><span class="sxs-lookup"><span data-stu-id="f8a60-140">This implements the `GetUserDetails` function, which uses the Microsoft Graph SDK to call the `/me` endpoint and return the result.</span></span>
+    <span data-ttu-id="e17d5-140">Cette fonctionnalité implémente `GetUserDetails` la fonction, qui utilise le kit de développement logiciel ( `/me` SDK) Microsoft Graph pour appeler le point de terminaison et renvoyer le résultat.</span><span class="sxs-lookup"><span data-stu-id="e17d5-140">This implements the `GetUserDetails` function, which uses the Microsoft Graph SDK to call the `/me` endpoint and return the result.</span></span>
 
-1. <span data-ttu-id="f8a60-141">Mettez à `OnAuthorizationCodeReceivedAsync` jour la `App_Start/Startup.Auth.cs` méthode dans pour appeler cette fonction.</span><span class="sxs-lookup"><span data-stu-id="f8a60-141">Update the `OnAuthorizationCodeReceivedAsync` method in `App_Start/Startup.Auth.cs` to call this function.</span></span> <span data-ttu-id="f8a60-142">Ajoutez l’instruction `using` suivante en haut du fichier.</span><span class="sxs-lookup"><span data-stu-id="f8a60-142">Add the following `using` statement to the top of the file.</span></span>
+1. <span data-ttu-id="e17d5-141">Mettez à `OnAuthorizationCodeReceivedAsync` jour la `App_Start/Startup.Auth.cs` méthode dans pour appeler cette fonction.</span><span class="sxs-lookup"><span data-stu-id="e17d5-141">Update the `OnAuthorizationCodeReceivedAsync` method in `App_Start/Startup.Auth.cs` to call this function.</span></span> <span data-ttu-id="e17d5-142">Ajoutez l’instruction `using` suivante en haut du fichier.</span><span class="sxs-lookup"><span data-stu-id="e17d5-142">Add the following `using` statement to the top of the file.</span></span>
 
     ```cs
     using graph_tutorial.Helpers;
     ```
 
-1. <span data-ttu-id="f8a60-143">Remplacez le bloc `try` `OnAuthorizationCodeReceivedAsync` existant par le code suivant.</span><span class="sxs-lookup"><span data-stu-id="f8a60-143">Replace the existing `try` block in `OnAuthorizationCodeReceivedAsync` with the following code.</span></span>
+1. <span data-ttu-id="e17d5-143">Remplacez le bloc `try` `OnAuthorizationCodeReceivedAsync` existant par le code suivant.</span><span class="sxs-lookup"><span data-stu-id="e17d5-143">Replace the existing `try` block in `OnAuthorizationCodeReceivedAsync` with the following code.</span></span>
 
     ```cs
     try
@@ -279,19 +279,19 @@
     }
     ```
 
-1. <span data-ttu-id="f8a60-144">Enregistrez vos modifications et démarrez l’application, après vous être connecté, vous devriez voir le nom et l’adresse de messagerie de l’utilisateur au lieu du jeton d’accès.</span><span class="sxs-lookup"><span data-stu-id="f8a60-144">Save your changes and start the app, after sign-in you should see the user's name and email address instead of the access token.</span></span>
+1. <span data-ttu-id="e17d5-144">Enregistrez vos modifications et démarrez l’application, après vous être connecté, vous devriez voir le nom et l’adresse de messagerie de l’utilisateur au lieu du jeton d’accès.</span><span class="sxs-lookup"><span data-stu-id="e17d5-144">Save your changes and start the app, after sign-in you should see the user's name and email address instead of the access token.</span></span>
 
-## <a name="storing-the-tokens"></a><span data-ttu-id="f8a60-145">Stockage des jetons</span><span class="sxs-lookup"><span data-stu-id="f8a60-145">Storing the tokens</span></span>
+## <a name="storing-the-tokens"></a><span data-ttu-id="e17d5-145">Stockage des jetons</span><span class="sxs-lookup"><span data-stu-id="e17d5-145">Storing the tokens</span></span>
 
-<span data-ttu-id="f8a60-146">Maintenant que vous pouvez obtenir des jetons, il est temps de mettre en œuvre un moyen de les stocker dans l’application.</span><span class="sxs-lookup"><span data-stu-id="f8a60-146">Now that you can get tokens, it's time to implement a way to store them in the app.</span></span> <span data-ttu-id="f8a60-147">Étant donné qu’il s’agit d’un exemple d’application, vous allez utiliser la session pour stocker les jetons.</span><span class="sxs-lookup"><span data-stu-id="f8a60-147">Since this is a sample app, you will use the session to store the tokens.</span></span> <span data-ttu-id="f8a60-148">Une application réelle utiliserait une solution de stockage sécurisé plus fiable, comme une base de données.</span><span class="sxs-lookup"><span data-stu-id="f8a60-148">A real-world app would use a more reliable secure storage solution, like a database.</span></span> <span data-ttu-id="f8a60-149">Dans cette section, vous allez:</span><span class="sxs-lookup"><span data-stu-id="f8a60-149">In this section, you will:</span></span>
+<span data-ttu-id="e17d5-146">Maintenant que vous pouvez obtenir des jetons, il est temps de mettre en œuvre un moyen de les stocker dans l’application.</span><span class="sxs-lookup"><span data-stu-id="e17d5-146">Now that you can get tokens, it's time to implement a way to store them in the app.</span></span> <span data-ttu-id="e17d5-147">Étant donné qu’il s’agit d’un exemple d’application, vous allez utiliser la session pour stocker les jetons.</span><span class="sxs-lookup"><span data-stu-id="e17d5-147">Since this is a sample app, you will use the session to store the tokens.</span></span> <span data-ttu-id="e17d5-148">Une application réelle utiliserait une solution de stockage sécurisé plus fiable, comme une base de données.</span><span class="sxs-lookup"><span data-stu-id="e17d5-148">A real-world app would use a more reliable secure storage solution, like a database.</span></span> <span data-ttu-id="e17d5-149">Dans cette section, vous allez :</span><span class="sxs-lookup"><span data-stu-id="e17d5-149">In this section, you will:</span></span>
 
-- <span data-ttu-id="f8a60-150">Implémentez une classe de magasin de jetons pour sérialiser et stocker le cache de jetons MSAL, ainsi que les détails de l’utilisateur dans la session utilisateur.</span><span class="sxs-lookup"><span data-stu-id="f8a60-150">Implement a token store class to serialize and store the MSAL token cache and the user's details in the user session.</span></span>
-- <span data-ttu-id="f8a60-151">Mettez à jour le code d’authentification pour utiliser la classe de magasin de jetons.</span><span class="sxs-lookup"><span data-stu-id="f8a60-151">Update the authentication code to use the token store class.</span></span>
-- <span data-ttu-id="f8a60-152">Mettez à jour la classe de contrôleur de base pour exposer les détails de l’utilisateur stocké à tous les affichages de l’application.</span><span class="sxs-lookup"><span data-stu-id="f8a60-152">Update the base controller class to expose the stored user details to all views in the application.</span></span>
+- <span data-ttu-id="e17d5-150">Implémentez une classe de magasin de jetons pour sérialiser et stocker le cache de jetons MSAL, ainsi que les détails de l’utilisateur dans la session utilisateur.</span><span class="sxs-lookup"><span data-stu-id="e17d5-150">Implement a token store class to serialize and store the MSAL token cache and the user's details in the user session.</span></span>
+- <span data-ttu-id="e17d5-151">Mettez à jour le code d’authentification pour utiliser la classe de magasin de jetons.</span><span class="sxs-lookup"><span data-stu-id="e17d5-151">Update the authentication code to use the token store class.</span></span>
+- <span data-ttu-id="e17d5-152">Mettez à jour la classe de contrôleur de base pour exposer les détails de l’utilisateur stocké à tous les affichages de l’application.</span><span class="sxs-lookup"><span data-stu-id="e17d5-152">Update the base controller class to expose the stored user details to all views in the application.</span></span>
 
-1. <span data-ttu-id="f8a60-153">Cliquez avec le bouton droit sur le dossier **Graph-Tutorial** dans l’Explorateur de solutions, puis sélectionnez **Ajouter > nouveau dossier**.</span><span class="sxs-lookup"><span data-stu-id="f8a60-153">Right-click the **graph-tutorial** folder in Solution Explorer, and select **Add > New Folder**.</span></span> <span data-ttu-id="f8a60-154">Nommez le `TokenStorage`dossier.</span><span class="sxs-lookup"><span data-stu-id="f8a60-154">Name the folder `TokenStorage`.</span></span>
+1. <span data-ttu-id="e17d5-153">Cliquez avec le bouton droit sur le dossier **Graph-Tutorial** dans l’Explorateur de solutions, puis sélectionnez **Ajouter > nouveau dossier**.</span><span class="sxs-lookup"><span data-stu-id="e17d5-153">Right-click the **graph-tutorial** folder in Solution Explorer, and select **Add > New Folder**.</span></span> <span data-ttu-id="e17d5-154">Nommez le `TokenStorage`dossier.</span><span class="sxs-lookup"><span data-stu-id="e17d5-154">Name the folder `TokenStorage`.</span></span>
 
-1. <span data-ttu-id="f8a60-155">Cliquez avec le bouton droit sur ce nouveau dossier, puis sélectionnez **Ajouter une classe de >.**... Nommez le `SessionTokenStore.cs` fichier, puis sélectionnez **Ajouter**.</span><span class="sxs-lookup"><span data-stu-id="f8a60-155">Right click this new folder and select **Add > Class...**. Name the file `SessionTokenStore.cs` and select **Add**.</span></span> <span data-ttu-id="f8a60-156">Remplacez le contenu de ce fichier par le code suivant.</span><span class="sxs-lookup"><span data-stu-id="f8a60-156">Replace the contents of this file with the following code.</span></span>
+1. <span data-ttu-id="e17d5-155">Cliquez avec le bouton droit sur ce nouveau dossier, puis sélectionnez **Ajouter une classe de >.**... Nommez le `SessionTokenStore.cs` fichier, puis sélectionnez **Ajouter**.</span><span class="sxs-lookup"><span data-stu-id="e17d5-155">Right click this new folder and select **Add > Class...**. Name the file `SessionTokenStore.cs` and select **Add**.</span></span> <span data-ttu-id="e17d5-156">Remplacez le contenu de ce fichier par le code suivant.</span><span class="sxs-lookup"><span data-stu-id="e17d5-156">Replace the contents of this file with the following code.</span></span>
 
     ```cs
     // Copyright (c) Microsoft Corporation. All rights reserved.
@@ -414,7 +414,7 @@
                     var userObjectId = user.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value ??
                         user.FindFirst("oid").Value;
 
-                    var userTenantId = user.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value ??
+                    var userTenantId = user.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value ??
                         user.FindFirst("tid").Value;
 
                     if (!string.IsNullOrEmpty(userObjectId) && !string.IsNullOrEmpty(userTenantId))
@@ -429,13 +429,14 @@
     }
     ```
 
-1. <span data-ttu-id="f8a60-157">Ajoutez l’instruction `using` suivante en haut du `App_Start/Startup.Auth.cs` fichier.</span><span class="sxs-lookup"><span data-stu-id="f8a60-157">Add the following `using` statement to the top of the `App_Start/Startup.Auth.cs` file.</span></span>
+1. <span data-ttu-id="e17d5-157">Ajoutez les instructions `using` suivantes en haut du `App_Start/Startup.Auth.cs` fichier.</span><span class="sxs-lookup"><span data-stu-id="e17d5-157">Add the following `using` statements to the top of the `App_Start/Startup.Auth.cs` file.</span></span>
 
     ```cs
     using graph_tutorial.TokenStorage;
+    using System.Security.Claims;
     ```
 
-1. <span data-ttu-id="f8a60-158">Remplacez la fonction `OnAuthorizationCodeReceivedAsync` existante par ce qui suit.</span><span class="sxs-lookup"><span data-stu-id="f8a60-158">Replace the existing `OnAuthorizationCodeReceivedAsync` function with the following.</span></span>
+1. <span data-ttu-id="e17d5-158">Remplacez la fonction `OnAuthorizationCodeReceivedAsync` existante par ce qui suit.</span><span class="sxs-lookup"><span data-stu-id="e17d5-158">Replace the existing `OnAuthorizationCodeReceivedAsync` function with the following.</span></span>
 
     ```cs
     private async Task OnAuthorizationCodeReceivedAsync(AuthorizationCodeReceivedNotification notification)
@@ -483,19 +484,19 @@
     ```
 
     > [!NOTE]
-    > <span data-ttu-id="f8a60-159">Les modifications apportées à cette `OnAuthorizationCodeReceivedAsync` nouvelle version de effectuent les opérations suivantes:</span><span class="sxs-lookup"><span data-stu-id="f8a60-159">The changes in this new version of `OnAuthorizationCodeReceivedAsync` do the following:</span></span>
+    > <span data-ttu-id="e17d5-159">Les modifications apportées à cette `OnAuthorizationCodeReceivedAsync` nouvelle version de effectuent les opérations suivantes :</span><span class="sxs-lookup"><span data-stu-id="e17d5-159">The changes in this new version of `OnAuthorizationCodeReceivedAsync` do the following:</span></span>
     >
-    > - <span data-ttu-id="f8a60-160">Le code intègre désormais le `ConfidentialClientApplication`cache de jetons de l’utilisateur par défaut `SessionTokenStore` à la classe.</span><span class="sxs-lookup"><span data-stu-id="f8a60-160">The code now wraps the `ConfidentialClientApplication`'s default user token cache with the `SessionTokenStore` class.</span></span> <span data-ttu-id="f8a60-161">La bibliothèque MSAL gérera la logique de stockage des jetons et de l’actualiser si nécessaire.</span><span class="sxs-lookup"><span data-stu-id="f8a60-161">The MSAL library will handle the logic of storing the tokens and refreshing it when needed.</span></span>
-    > - <span data-ttu-id="f8a60-162">Le code transmet maintenant les détails de l’utilisateur obtenus de Microsoft Graph `SessionTokenStore` à l’objet à stocker dans la session.</span><span class="sxs-lookup"><span data-stu-id="f8a60-162">The code now passes the user details obtained from Microsoft Graph to the `SessionTokenStore` object to store in the session.</span></span>
-    > - <span data-ttu-id="f8a60-163">En cas de réussite, le code ne redirige plus, il se contente de le renvoyer.</span><span class="sxs-lookup"><span data-stu-id="f8a60-163">On success, the code no longer redirects, it just returns.</span></span> <span data-ttu-id="f8a60-164">Cela permet au middleware OWIN de terminer le processus d’authentification.</span><span class="sxs-lookup"><span data-stu-id="f8a60-164">This allows the OWIN middleware to complete the authentication process.</span></span>
+    > - <span data-ttu-id="e17d5-160">Le code intègre désormais le `ConfidentialClientApplication`cache de jetons de l’utilisateur par défaut `SessionTokenStore` à la classe.</span><span class="sxs-lookup"><span data-stu-id="e17d5-160">The code now wraps the `ConfidentialClientApplication`'s default user token cache with the `SessionTokenStore` class.</span></span> <span data-ttu-id="e17d5-161">La bibliothèque MSAL gérera la logique de stockage des jetons et de l’actualiser si nécessaire.</span><span class="sxs-lookup"><span data-stu-id="e17d5-161">The MSAL library will handle the logic of storing the tokens and refreshing it when needed.</span></span>
+    > - <span data-ttu-id="e17d5-162">Le code transmet maintenant les détails de l’utilisateur obtenus de Microsoft Graph `SessionTokenStore` à l’objet à stocker dans la session.</span><span class="sxs-lookup"><span data-stu-id="e17d5-162">The code now passes the user details obtained from Microsoft Graph to the `SessionTokenStore` object to store in the session.</span></span>
+    > - <span data-ttu-id="e17d5-163">En cas de réussite, le code ne redirige plus, il se contente de le renvoyer.</span><span class="sxs-lookup"><span data-stu-id="e17d5-163">On success, the code no longer redirects, it just returns.</span></span> <span data-ttu-id="e17d5-164">Cela permet au middleware OWIN de terminer le processus d’authentification.</span><span class="sxs-lookup"><span data-stu-id="e17d5-164">This allows the OWIN middleware to complete the authentication process.</span></span>
 
-1. <span data-ttu-id="f8a60-165">Mettre à `SignOut` jour l’action pour effacer le magasin de jetons avant de se déconnecter. Ajoutez l’instruction `using` suivante en haut de `Controllers/AccountController.cs`.</span><span class="sxs-lookup"><span data-stu-id="f8a60-165">Update the `SignOut` action to clear the token store before signing out. Add the following `using` statement to the top of `Controllers/AccountController.cs`.</span></span>
+1. <span data-ttu-id="e17d5-165">Mettre à `SignOut` jour l’action pour effacer le magasin de jetons avant de se déconnecter. Ajoutez l’instruction `using` suivante en haut de `Controllers/AccountController.cs`.</span><span class="sxs-lookup"><span data-stu-id="e17d5-165">Update the `SignOut` action to clear the token store before signing out. Add the following `using` statement to the top of `Controllers/AccountController.cs`.</span></span>
 
     ```cs
     using graph_tutorial.TokenStorage;
     ```
 
-1. <span data-ttu-id="f8a60-166">Remplacez la fonction `SignOut` existante par ce qui suit.</span><span class="sxs-lookup"><span data-stu-id="f8a60-166">Replace the existing `SignOut` function with the following.</span></span>
+1. <span data-ttu-id="e17d5-166">Remplacez la fonction `SignOut` existante par ce qui suit.</span><span class="sxs-lookup"><span data-stu-id="e17d5-166">Replace the existing `SignOut` function with the following.</span></span>
 
     ```cs
     public ActionResult SignOut()
@@ -515,7 +516,7 @@
     }
     ```
 
-1. <span data-ttu-id="f8a60-167">Ouvrez `Controllers/BaseController.cs` et ajoutez les instructions `using` suivantes en haut du fichier.</span><span class="sxs-lookup"><span data-stu-id="f8a60-167">Open `Controllers/BaseController.cs` and add the following `using` statements to the top of the file.</span></span>
+1. <span data-ttu-id="e17d5-167">Ouvrez `Controllers/BaseController.cs` et ajoutez les instructions `using` suivantes en haut du fichier.</span><span class="sxs-lookup"><span data-stu-id="e17d5-167">Open `Controllers/BaseController.cs` and add the following `using` statements to the top of the file.</span></span>
 
     ```cs
     using graph_tutorial.TokenStorage;
@@ -524,7 +525,7 @@
     using Microsoft.Owin.Security.Cookies;
     ```
 
-1. <span data-ttu-id="f8a60-168">Ajoutez la fonction suivante.</span><span class="sxs-lookup"><span data-stu-id="f8a60-168">Add the following function.</span></span>
+1. <span data-ttu-id="e17d5-168">Ajoutez la fonction suivante.</span><span class="sxs-lookup"><span data-stu-id="e17d5-168">Add the following function.</span></span>
 
     ```cs
     protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -553,18 +554,18 @@
     }
     ```
 
-1. <span data-ttu-id="f8a60-169">Démarrez le serveur et parcourez le processus de connexion.</span><span class="sxs-lookup"><span data-stu-id="f8a60-169">Start the server and go through the sign-in process.</span></span> <span data-ttu-id="f8a60-170">Vous devez revenir sur la page d’accueil, mais l’interface utilisateur doit changer pour indiquer que vous êtes connecté.</span><span class="sxs-lookup"><span data-stu-id="f8a60-170">You should end up back on the home page, but the UI should change to indicate that you are signed-in.</span></span>
+1. <span data-ttu-id="e17d5-169">Démarrez le serveur et parcourez le processus de connexion.</span><span class="sxs-lookup"><span data-stu-id="e17d5-169">Start the server and go through the sign-in process.</span></span> <span data-ttu-id="e17d5-170">Vous devez revenir sur la page d’accueil, mais l’interface utilisateur doit changer pour indiquer que vous êtes connecté.</span><span class="sxs-lookup"><span data-stu-id="e17d5-170">You should end up back on the home page, but the UI should change to indicate that you are signed-in.</span></span>
 
     ![Capture d’écran de la page d’accueil après la connexion](./images/add-aad-auth-01.png)
 
-1. <span data-ttu-id="f8a60-172">Cliquez sur Avatar de l’utilisateur dans le coin supérieur droit pour \*\*\*\* accéder au lien Déconnexion.</span><span class="sxs-lookup"><span data-stu-id="f8a60-172">Click the user avatar in the top right corner to access the **Sign Out** link.</span></span> <span data-ttu-id="f8a60-173">Cliquez \*\*\*\* sur Déconnexion pour réinitialiser la session et revenir à la page d’accueil.</span><span class="sxs-lookup"><span data-stu-id="f8a60-173">Clicking **Sign Out** resets the session and returns you to the home page.</span></span>
+1. <span data-ttu-id="e17d5-172">Cliquez sur Avatar de l’utilisateur dans le coin supérieur droit pour accéder au lien **déconnexion** .</span><span class="sxs-lookup"><span data-stu-id="e17d5-172">Click the user avatar in the top right corner to access the **Sign Out** link.</span></span> <span data-ttu-id="e17d5-173">Cliquez sur **déconnexion** pour réinitialiser la session et revenir à la page d’accueil.</span><span class="sxs-lookup"><span data-stu-id="e17d5-173">Clicking **Sign Out** resets the session and returns you to the home page.</span></span>
 
     ![Capture d’écran du menu déroulant avec le lien Déconnexion](./images/add-aad-auth-02.png)
 
-## <a name="refreshing-tokens"></a><span data-ttu-id="f8a60-175">Actualisation des jetons</span><span class="sxs-lookup"><span data-stu-id="f8a60-175">Refreshing tokens</span></span>
+## <a name="refreshing-tokens"></a><span data-ttu-id="e17d5-175">Actualisation des jetons</span><span class="sxs-lookup"><span data-stu-id="e17d5-175">Refreshing tokens</span></span>
 
-<span data-ttu-id="f8a60-176">À ce stade, votre application a un jeton d’accès, qui est envoyé `Authorization` dans l’en-tête des appels d’API.</span><span class="sxs-lookup"><span data-stu-id="f8a60-176">At this point your application has an access token, which is sent in the `Authorization` header of API calls.</span></span> <span data-ttu-id="f8a60-177">Il s’agit du jeton qui permet à l’application d’accéder à Microsoft Graph pour le compte de l’utilisateur.</span><span class="sxs-lookup"><span data-stu-id="f8a60-177">This is the token that allows the app to access Microsoft Graph on the user's behalf.</span></span>
+<span data-ttu-id="e17d5-176">À ce stade, votre application a un jeton d’accès, qui est envoyé `Authorization` dans l’en-tête des appels d’API.</span><span class="sxs-lookup"><span data-stu-id="e17d5-176">At this point your application has an access token, which is sent in the `Authorization` header of API calls.</span></span> <span data-ttu-id="e17d5-177">Il s’agit du jeton qui permet à l’application d’accéder à Microsoft Graph pour le compte de l’utilisateur.</span><span class="sxs-lookup"><span data-stu-id="e17d5-177">This is the token that allows the app to access Microsoft Graph on the user's behalf.</span></span>
 
-<span data-ttu-id="f8a60-178">Toutefois, ce jeton est éphémère.</span><span class="sxs-lookup"><span data-stu-id="f8a60-178">However, this token is short-lived.</span></span> <span data-ttu-id="f8a60-179">Le jeton expire une heure après son émission.</span><span class="sxs-lookup"><span data-stu-id="f8a60-179">The token expires an hour after it is issued.</span></span> <span data-ttu-id="f8a60-180">C’est ici que le jeton d’actualisation devient utile.</span><span class="sxs-lookup"><span data-stu-id="f8a60-180">This is where the refresh token becomes useful.</span></span> <span data-ttu-id="f8a60-181">Le jeton d’actualisation permet à l’application de demander un nouveau jeton d’accès sans demander à l’utilisateur de se reconnecter.</span><span class="sxs-lookup"><span data-stu-id="f8a60-181">The refresh token allows the app to request a new access token without requiring the user to sign in again.</span></span>
+<span data-ttu-id="e17d5-178">Toutefois, ce jeton est éphémère.</span><span class="sxs-lookup"><span data-stu-id="e17d5-178">However, this token is short-lived.</span></span> <span data-ttu-id="e17d5-179">Le jeton expire une heure après son émission.</span><span class="sxs-lookup"><span data-stu-id="e17d5-179">The token expires an hour after it is issued.</span></span> <span data-ttu-id="e17d5-180">C’est ici que le jeton d’actualisation devient utile.</span><span class="sxs-lookup"><span data-stu-id="e17d5-180">This is where the refresh token becomes useful.</span></span> <span data-ttu-id="e17d5-181">Le jeton d’actualisation permet à l’application de demander un nouveau jeton d’accès sans demander à l’utilisateur de se reconnecter.</span><span class="sxs-lookup"><span data-stu-id="e17d5-181">The refresh token allows the app to request a new access token without requiring the user to sign in again.</span></span>
 
-<span data-ttu-id="f8a60-182">Étant donné que l’application utilise la bibliothèque MSAL et sérialise l' `TokenCache` objet, il n’est pas nécessaire d’implémenter une logique d’actualisation de jeton.</span><span class="sxs-lookup"><span data-stu-id="f8a60-182">Because the app is using the MSAL library and serializing the `TokenCache` object, you do not have to implement any token refresh logic.</span></span> <span data-ttu-id="f8a60-183">La `ConfidentialClientApplication.AcquireTokenSilentAsync` méthode effectue l’ensemble de la logique pour vous.</span><span class="sxs-lookup"><span data-stu-id="f8a60-183">The `ConfidentialClientApplication.AcquireTokenSilentAsync` method does all of the logic for you.</span></span> <span data-ttu-id="f8a60-184">Il vérifie d’abord le jeton mis en cache et, s’il n’a pas expiré, il le renvoie.</span><span class="sxs-lookup"><span data-stu-id="f8a60-184">It first checks the cached token, and if it is not expired, it returns it.</span></span> <span data-ttu-id="f8a60-185">Si elle a expiré, elle utilise le jeton d’actualisation mis en cache pour en obtenir une nouvelle.</span><span class="sxs-lookup"><span data-stu-id="f8a60-185">If it is expired, it uses the cached refresh token to obtain a new one.</span></span> <span data-ttu-id="f8a60-186">Vous utiliserez cette méthode dans le module suivant.</span><span class="sxs-lookup"><span data-stu-id="f8a60-186">You'll use this method in the following module.</span></span>
+<span data-ttu-id="e17d5-182">Étant donné que l’application utilise la bibliothèque MSAL et sérialise l' `TokenCache` objet, il n’est pas nécessaire d’implémenter une logique d’actualisation de jeton.</span><span class="sxs-lookup"><span data-stu-id="e17d5-182">Because the app is using the MSAL library and serializing the `TokenCache` object, you do not have to implement any token refresh logic.</span></span> <span data-ttu-id="e17d5-183">La `ConfidentialClientApplication.AcquireTokenSilentAsync` méthode effectue l’ensemble de la logique pour vous.</span><span class="sxs-lookup"><span data-stu-id="e17d5-183">The `ConfidentialClientApplication.AcquireTokenSilentAsync` method does all of the logic for you.</span></span> <span data-ttu-id="e17d5-184">Il vérifie d’abord le jeton mis en cache et, s’il n’a pas expiré, il le renvoie.</span><span class="sxs-lookup"><span data-stu-id="e17d5-184">It first checks the cached token, and if it is not expired, it returns it.</span></span> <span data-ttu-id="e17d5-185">Si elle a expiré, elle utilise le jeton d’actualisation mis en cache pour en obtenir une nouvelle.</span><span class="sxs-lookup"><span data-stu-id="e17d5-185">If it is expired, it uses the cached refresh token to obtain a new one.</span></span> <span data-ttu-id="e17d5-186">Vous utiliserez cette méthode dans le module suivant.</span><span class="sxs-lookup"><span data-stu-id="e17d5-186">You'll use this method in the following module.</span></span>
