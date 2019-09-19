@@ -2,7 +2,7 @@
 
 Ce module vous permettra de vous familiariser avec le kit de développement logiciel (SDK) Microsoft Graph .NET lors de la création d’une application Web ASP.NET MVC pour accéder aux données dans Office 365.
 
-## <a name="lab---build-mvc-apps-with-the-microsoft-graph-net-sdk"></a>Atelier: création d’applications MVC avec le kit de développement logiciel (SDK) Microsoft Graph .NET
+## <a name="lab---build-mvc-apps-with-the-microsoft-graph-net-sdk"></a>Atelier : création d’applications MVC avec le kit de développement logiciel (SDK) Microsoft Graph .NET
 
 Dans cet atelier, vous allez créer une application MVC ASP.NET, configurée avec Azure Active Directory (Azure AD) pour l’authentification & autorisation, qui accède aux données dans Office 365 à l’aide du kit de développement logiciel (SDK) Microsoft Graph .NET.
 
@@ -10,7 +10,7 @@ Dans cet atelier, vous allez créer une application MVC ASP.NET, configurée ave
 
 ## <a name="demos"></a>Démonstrations
 
-Le [](./Demos) répertoire Demos de ce référentiel contient des copies du projet qui correspondent à la réalisation de sections individuelles du didacticiel. Si vous souhaitez simplement lancer une démonstration d’une section particulière du didacticiel, vous pouvez commencer par la version de la section précédente.
+Le répertoire [Demos](./Demos) de ce référentiel contient des copies du projet qui correspondent à la réalisation de sections individuelles du didacticiel. Si vous souhaitez simplement lancer une démonstration d’une section particulière du didacticiel, vous pouvez commencer par la version de la section précédente.
 
 - [01-create-app](Demos/01-create-app): terminé [créer une application Web ASP.NET MVC](https://docs.microsoft.com/graph/training/aspnet-tutorial?tutorial-step=1)
 - [02-Add-AAD-auth](Demos/02-add-aad-auth): terminé [Ajouter l’authentification Azure ad](https://docs.microsoft.com/graph/training/aspnet-tutorial?tutorial-step=3)
@@ -24,7 +24,7 @@ Si vous souhaitez simplement obtenir l’exemple complet généré en suivant ce
 
 ## <a name="watch-the-module"></a>Regarder le module
 
-Ce module a été enregistré et est disponible dans le canal YouTube de développement Office: [créer des applications MVC avec le kit de développement logiciel (SDK) Microsoft Graph .net](https://youtu.be/a2teHZ5WuNc)
+Ce module a été enregistré et est disponible dans le canal YouTube de développement Office : [créer des applications MVC avec le kit de développement logiciel (SDK) Microsoft Graph .net](https://youtu.be/a2teHZ5WuNc)
 
 ## <a name="contributors"></a>Collaborateurs
 
@@ -39,6 +39,7 @@ Ce module a été enregistré et est disponible dans le canal YouTube de dévelo
 
 | Version |        Date        |                       Comments                       |
 | ------- | ------------------ | ---------------------------------------------------- |
+| 1,10    | 9 septembre 2019  | actualisation du contenu 2020Q1                               |
 | 1.9     | 18 juin 2019      | Fichier Lisez-moi mis à jour pour l’enregistrement de captures numériques     |
 | 1.8     | 29 mai 2018       | actualisation du contenu 2019Q4                               |
 | 1.7     | 4 avril 2018      | actualisation du contenu 2019Q3                               |

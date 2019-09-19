@@ -18,7 +18,7 @@ Dans cet exercice, vous allez étendre l’application de l’exercice précéde
     > [!IMPORTANT]
     > Si vous utilisez le contrôle de code source tel que git, il est maintenant recommandé d’exclure le `PrivateSettings.config` fichier du contrôle de code source afin d’éviter une fuite accidentelle de votre ID d’application et de votre mot de passe.
 
-1. Mise `Web.config` à jour pour charger ce nouveau fichier. Remplacez `<appSettings>` (ligne 7) par ce qui suit:
+1. Mise `Web.config` à jour pour charger ce nouveau fichier. Remplacez `<appSettings>` (ligne 7) par ce qui suit :
 
     ```xml
     <appSettings file="PrivateSettings.config">
@@ -60,39 +60,39 @@ Commencez par initialiser l’intergiciel OWIN pour utiliser l’authentificatio
                 app.UseCookieAuthentication(new CookieAuthenticationOptions());
 
                 app.UseOpenIdConnectAuthentication(
-                  new OpenIdConnectAuthenticationOptions
-                  {
-                      ClientId = appId,
-                      Authority = "https://login.microsoftonline.com/common/v2.0",
-                      Scope = $"openid email profile offline_access {graphScopes}",
-                      RedirectUri = redirectUri,
-                      PostLogoutRedirectUri = redirectUri,
-                      TokenValidationParameters = new TokenValidationParameters
-                      {
-                          // For demo purposes only, see below
-                          ValidateIssuer = false
+                    new OpenIdConnectAuthenticationOptions
+                    {
+                        ClientId = appId,
+                        Authority = "https://login.microsoftonline.com/common/v2.0",
+                        Scope = $"openid email profile offline_access {graphScopes}",
+                        RedirectUri = redirectUri,
+                        PostLogoutRedirectUri = redirectUri,
+                        TokenValidationParameters = new TokenValidationParameters
+                        {
+                            // For demo purposes only, see below
+                            ValidateIssuer = false
 
-                          // In a real multi-tenant app, you would add logic to determine whether the
-                          // issuer was from an authorized tenant
-                          //ValidateIssuer = true,
-                          //IssuerValidator = (issuer, token, tvp) =>
-                          //{
-                          //  if (MyCustomTenantValidation(issuer))
-                          //  {
-                          //    return issuer;
-                          //  }
-                          //  else
-                          //  {
-                          //    throw new SecurityTokenInvalidIssuerException("Invalid issuer");
-                          //  }
-                          //}
-                      },
-                      Notifications = new OpenIdConnectAuthenticationNotifications
-                      {
-                          AuthenticationFailed = OnAuthenticationFailedAsync,
-                          AuthorizationCodeReceived = OnAuthorizationCodeReceivedAsync
-                      }
-                  }
+                            // In a real multi-tenant app, you would add logic to determine whether the
+                            // issuer was from an authorized tenant
+                            //ValidateIssuer = true,
+                            //IssuerValidator = (issuer, token, tvp) =>
+                            //{
+                            //  if (MyCustomTenantValidation(issuer))
+                            //  {
+                            //    return issuer;
+                            //  }
+                            //  else
+                            //  {
+                            //    throw new SecurityTokenInvalidIssuerException("Invalid issuer");
+                            //  }
+                            //}
+                        },
+                        Notifications = new OpenIdConnectAuthenticationNotifications
+                        {
+                            AuthenticationFailed = OnAuthenticationFailedAsync,
+                            AuthorizationCodeReceived = OnAuthorizationCodeReceivedAsync
+                        }
+                    }
                 );
             }
 
@@ -283,7 +283,7 @@ Une fois que l’utilisateur est connecté, vous pouvez obtenir ses informations
 
 ## <a name="storing-the-tokens"></a>Stockage des jetons
 
-Maintenant que vous pouvez obtenir des jetons, il est temps de mettre en œuvre un moyen de les stocker dans l’application. Étant donné qu’il s’agit d’un exemple d’application, vous allez utiliser la session pour stocker les jetons. Une application réelle utiliserait une solution de stockage sécurisé plus fiable, comme une base de données. Dans cette section, vous allez:
+Maintenant que vous pouvez obtenir des jetons, il est temps de mettre en œuvre un moyen de les stocker dans l’application. Étant donné qu’il s’agit d’un exemple d’application, vous allez utiliser la session pour stocker les jetons. Une application réelle utiliserait une solution de stockage sécurisé plus fiable, comme une base de données. Dans cette section, vous allez :
 
 - Implémentez une classe de magasin de jetons pour sérialiser et stocker le cache de jetons MSAL, ainsi que les détails de l’utilisateur dans la session utilisateur.
 - Mettez à jour le code d’authentification pour utiliser la classe de magasin de jetons.
@@ -414,7 +414,7 @@ Maintenant que vous pouvez obtenir des jetons, il est temps de mettre en œuvre 
                     var userObjectId = user.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value ??
                         user.FindFirst("oid").Value;
 
-                    var userTenantId = user.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value ??
+                    var userTenantId = user.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value ??
                         user.FindFirst("tid").Value;
 
                     if (!string.IsNullOrEmpty(userObjectId) && !string.IsNullOrEmpty(userTenantId))
@@ -429,10 +429,11 @@ Maintenant que vous pouvez obtenir des jetons, il est temps de mettre en œuvre 
     }
     ```
 
-1. Ajoutez l’instruction `using` suivante en haut du `App_Start/Startup.Auth.cs` fichier.
+1. Ajoutez les instructions `using` suivantes en haut du `App_Start/Startup.Auth.cs` fichier.
 
     ```cs
     using graph_tutorial.TokenStorage;
+    using System.Security.Claims;
     ```
 
 1. Remplacez la fonction `OnAuthorizationCodeReceivedAsync` existante par ce qui suit.
@@ -483,7 +484,7 @@ Maintenant que vous pouvez obtenir des jetons, il est temps de mettre en œuvre 
     ```
 
     > [!NOTE]
-    > Les modifications apportées à cette `OnAuthorizationCodeReceivedAsync` nouvelle version de effectuent les opérations suivantes:
+    > Les modifications apportées à cette `OnAuthorizationCodeReceivedAsync` nouvelle version de effectuent les opérations suivantes :
     >
     > - Le code intègre désormais le `ConfidentialClientApplication`cache de jetons de l’utilisateur par défaut `SessionTokenStore` à la classe. La bibliothèque MSAL gérera la logique de stockage des jetons et de l’actualiser si nécessaire.
     > - Le code transmet maintenant les détails de l’utilisateur obtenus de Microsoft Graph `SessionTokenStore` à l’objet à stocker dans la session.
@@ -557,7 +558,7 @@ Maintenant que vous pouvez obtenir des jetons, il est temps de mettre en œuvre 
 
     ![Capture d’écran de la page d’accueil après la connexion](./images/add-aad-auth-01.png)
 
-1. Cliquez sur Avatar de l’utilisateur dans le coin supérieur droit pour **** accéder au lien Déconnexion. Cliquez **** sur Déconnexion pour réinitialiser la session et revenir à la page d’accueil.
+1. Cliquez sur Avatar de l’utilisateur dans le coin supérieur droit pour accéder au lien **déconnexion** . Cliquez sur **déconnexion** pour réinitialiser la session et revenir à la page d’accueil.
 
     ![Capture d’écran du menu déroulant avec le lien Déconnexion](./images/add-aad-auth-02.png)
 

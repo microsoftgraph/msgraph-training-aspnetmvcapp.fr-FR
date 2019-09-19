@@ -19,7 +19,7 @@ Commencez par créer un projet MVC ASP.NET.
 
     ![Visual Studio 2019 créer une nouvelle boîte de dialogue d’application Web ASP.NET](./images/vs-create-new-asp-app.png)
 
-1. Appuyez sur **F5** ou sélectionnez déboguer **> démarrer**le débogage. Si tout fonctionne, votre navigateur par défaut doit ouvrir et afficher une page ASP.NET par défaut.
+1. Appuyez sur **F5** ou sélectionnez **déboguer > démarrer le débogage**. Si tout fonctionne, votre navigateur par défaut doit ouvrir et afficher une page ASP.NET par défaut.
 
 ## <a name="add-nuget-packages"></a>Ajouter des packages NuGet
 
@@ -39,8 +39,8 @@ Avant de poursuivre, mettez à `bootstrap` jour le package NuGet et installez de
     Install-Package Microsoft.Owin.Host.SystemWeb
     Install-Package Microsoft.Owin.Security.OpenIdConnect
     Install-Package Microsoft.Owin.Security.Cookies
-    Install-Package Microsoft.Identity.Client -Version 4.0.0
-    Install-Package Microsoft.Graph -Version 1.15.0
+    Install-Package Microsoft.Identity.Client -Version 4.3.1
+    Install-Package Microsoft.Graph -Version 1.17.0
     ```
 
 ## <a name="design-the-app"></a>Concevoir l’application
@@ -49,7 +49,7 @@ Dans cette section, vous allez créer la structure de base de l’application.
 
 1. Créer une classe de démarrage OWIN de base. Cliquez avec le bouton `graph-tutorial` droit sur le dossier dans l’Explorateur de solutions et sélectionnez **Ajouter > nouvel élément**. Choisissez le modèle de **classe de démarrage OWIN** , nommez le fichier `Startup.cs`, puis sélectionnez **Ajouter**.
 
-1. Cliquez avec le bouton **** droit sur le dossier Models dans l’Explorateur de solutions et sélectionnez **Ajouter une > classe...**. Nommez la `Alert` classe et sélectionnez **Ajouter**. Remplacez tout le contenu de `Alert.cs` par le code suivant.
+1. Cliquez avec le bouton droit sur le dossier **Models** dans l’Explorateur de solutions et sélectionnez **Ajouter une > classe...**. Nommez la `Alert` classe et sélectionnez **Ajouter**. Remplacez tout le contenu de `Alert.cs` par le code suivant.
 
     ```cs
     namespace graph_tutorial.Models
@@ -235,7 +235,7 @@ Dans cette section, vous allez créer la structure de base de l’application.
     }
     ```
 
-1. Ouvrez `Controllers/HomeController.cs` et modifiez la `public class HomeController : Controller` ligne comme suit:
+1. Ouvrez `Controllers/HomeController.cs` et modifiez la `public class HomeController : Controller` ligne comme suit :
 
     ```cs
     public class HomeController : BaseController
