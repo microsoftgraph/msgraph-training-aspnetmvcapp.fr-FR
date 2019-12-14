@@ -7,26 +7,27 @@
 </p>
 
 <p align="center">
-    <a href="https://travis-ci.org/FezVrasta/popper.js/branches" target="_blank"><img src="https://travis-ci.org/FezVrasta/popper.js.svg?branch=master" alt="Build Status"/></a>
-    <img src="http://img.badgesize.io/https://unpkg.com/popper.js/dist/popper.min.js?compression=gzip" alt="Stable Release Size"/>
-    <a href="https://www.bithound.io/github/FezVrasta/popper.js"><img src="https://www.bithound.io/github/FezVrasta/popper.js/badges/score.svg" alt="bitHound Overall Score"></a>
+    <img src="http://badge-size.now.sh/https://unpkg.com/popper.js/dist/popper.min.js?compression=brotli" alt="Stable Release Size"/>
+  <img src="http://badge-size.now.sh/https://unpkg.com/popper.js/dist/popper.min.js?compression=gzip" alt="Stable Release Size"/>
     <a href="https://codeclimate.com/github/FezVrasta/popper.js/coverage"><img src="https://codeclimate.com/github/FezVrasta/popper.js/badges/coverage.svg" alt="Istanbul Code Coverage"/></a>
-    <a href="https://gitter.im/FezVrasta/popper.js" target="_blank"><img src="https://img.shields.io/gitter/room/nwjs/nw.js.svg" alt="Get support or discuss"/></a>
+    <a href="https://www.npmjs.com/browse/depended/popper.js"><img src="https://badgen.net/npm/dependents/popper.js" alt="Dependents packages" /></a>
+    <a href="https://spectrum.chat/popper-js" target="_blank"><img src="https://img.shields.io/badge/chat-on_spectrum-6833F9.svg?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyBpZD0iTGl2ZWxsb18xIiBkYXRhLW5hbWU9IkxpdmVsbG8gMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMTAgOCI%2BPGRlZnM%2BPHN0eWxlPi5jbHMtMXtmaWxsOiNmZmY7fTwvc3R5bGU%2BPC9kZWZzPjx0aXRsZT5zcGVjdHJ1bTwvdGl0bGU%2BPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNNSwwQy40MiwwLDAsLjYzLDAsMy4zNGMwLDEuODQuMTksMi43MiwxLjc0LDMuMWgwVjcuNThhLjQ0LjQ0LDAsMCwwLC42OC4zNUw0LjM1LDYuNjlINWM0LjU4LDAsNS0uNjMsNS0zLjM1UzkuNTgsMCw1LDBaTTIuODMsNC4xOGEuNjMuNjMsMCwxLDEsLjY1LS42M0EuNjQuNjQsMCwwLDEsMi44Myw0LjE4Wk01LDQuMThhLjYzLjYzLDAsMSwxLC42NS0uNjNBLjY0LjY0LDAsMCwxLDUsNC4xOFptMi4xNywwYS42My42MywwLDEsMSwuNjUtLjYzQS42NC42NCwwLDAsMSw3LjE3LDQuMThaIi8%2BPC9zdmc%2B" alt="Get support or discuss"/></a>
     <br />
-    <a href="https://saucelabs.com/u/popperjs" target="_blank"><img src="https://badges.herokuapp.com/browsers?labels=none&googlechrome=latest&firefox=latest&microsoftedge=latest&iexplore=11,10&safari=latest&iphone=latest" alt="SauceLabs Reports"/></a>
+    <a href="https://travis-ci.org/FezVrasta/popper.js/branches" target="_blank"><img src="https://travis-ci.org/FezVrasta/popper.js.svg?branch=master" alt="Build Status"/></a>
+    <a href="https://saucelabs.com/u/popperjs" target="_blank"><img src="https://badges.herokuapp.com/browsers?labels=none&googlechrome=latest&firefox=latest&microsoftedge=latest&iexplore=11,10&safari=latest" alt="SauceLabs Reports"/></a>
 </p>
 
 <img src="https://raw.githubusercontent.com/FezVrasta/popper.js/master/popperjs.png" align="right" width=250 />
 
 <!-- 🚨 HEY! HERE BEGINS THE INTERESTING STUFF 🚨 -->
 
-## <a name="wut-poppers"></a>Wut? Pop-up?
+## <a name="wut-poppers"></a>Wut? Pop-up ?
 
-Un Popper est un élément à l’écran qui «sort» du flux naturel de votre application.  
+Un Popper est un élément à l’écran qui « sort » du flux naturel de votre application.  
 Des info-bulles, des popovers et des listes déroulantes sont des exemples courants de pop-up.
 
 
-## <a name="so-yet-another-tooltip-library"></a>Alors, une autre bibliothèque d’info-bulles?
+## <a name="so-yet-another-tooltip-library"></a>Alors, une autre bibliothèque d’info-bulles ?
 
 Eh bien, fondamentalement, **non**.  
 Popper. js étant un **moteur de positionnement**, son objectif est de calculer la position d’un élément de sorte qu’il soit possible de le positionner à proximité d’un élément de référence donné.  
@@ -41,14 +42,14 @@ Elle est utilisée par les grandes entreprises comme [Twitter dans bootstrap v4]
 
 Il s’agit du moteur, la bibliothèque qui calcule et, éventuellement, applique les styles aux pop-up.
 
-Voici quelques-uns des points clés:
+Voici quelques-uns des points clés :
 
-- Placez les éléments en les conservant dans leur contexte DOM d’origine (ne fonctionne pas avec votre DOM!);
-- Permet d’exporter les informations calculées afin de les intégrer à des bibliothèques de révisions et d’autres bibliothèques d’affichage;
-- Prend en charge les éléments Shadow DOM;
-- Entièrement personnalisable grâce à la structure basée sur les modificateurs;
+- Placez les éléments en les conservant dans leur contexte DOM d’origine (ne fonctionne pas avec votre DOM !);
+- Permet d’exporter les informations calculées afin de les intégrer à des bibliothèques de révisions et d’autres bibliothèques d’affichage ;
+- Prend en charge les éléments Shadow DOM ;
+- Entièrement personnalisable grâce à la structure basée sur les modificateurs ;
 
-Visitez notre [page de projet](https://fezvrasta.github.io/popper.js) pour voir un grand nombre d’exemples de ce que vous pouvez faire avec Popper. js!
+Visitez notre [page de projet](https://fezvrasta.github.io/popper.js) pour voir un grand nombre d’exemples de ce que vous pouvez faire avec Popper. js !
 
 Trouvez [la documentation ici](/docs/_includes/popper-documentation.md).
 
@@ -64,7 +65,7 @@ Trouvez [la documentation ici](/docs/_includes/tooltip-documentation.md).
 
 
 ## <a name="installation"></a>Installation
-Popper. js est disponible sur les gestionnaires de package et CDN suivants:
+Popper. js est disponible sur les gestionnaires de package et CDN suivants :
 
 | Source |                                                                                  |
 |:-------|:---------------------------------------------------------------------------------|
@@ -75,7 +76,7 @@ Popper. js est disponible sur les gestionnaires de package et CDN suivants:
 | unpkg  | [`https://unpkg.com/popper.js`](https://unpkg.com/popper.js)                     |
 | cdnjs  | [`https://cdnjs.com/libraries/popper.js`](https://cdnjs.com/libraries/popper.js) |
 
-ToolTip. js également:
+ToolTip. js également :
 
 | Source |                                                                                  |
 |:-------|:---------------------------------------------------------------------------------|
@@ -90,11 +91,11 @@ Pour plus d’informations, [Lisez le problème connexe](https://github.com/FezV
 
 ### <a name="dist-targets"></a>Cibles de dist
 
-Popper. js est actuellement fourni avec 3 cibles à l’esprit: UMD, ESM et ESNext.
+Popper. js est actuellement fourni avec 3 cibles à l’esprit : UMD, ESM et ESNext.
 
-- UMD-définition de module universel: AMD, RequireJS et Globals;
-- Modules ESM-ES: pour webpacking/ROLLUP ou pour les navigateurs prenant en charge les spécifications;
-- ESNext: disponible dans `dist/`, peut être utilisé avec WebPack et `babel-preset-env`;
+- UMD-définition de module universel : AMD, RequireJS et Globals ;
+- Modules ESM-ES : pour webpacking/ROLLUP ou pour les navigateurs prenant en charge les spécifications ;
+- ESNext : disponible dans `dist/`, peut être utilisé avec WebPack et `babel-preset-env`;
 
 Veillez à utiliser la bonne pour répondre à vos besoins. Si vous souhaitez l’importer avec une `<script>` balise, utilisez UMD.
 
@@ -135,7 +136,7 @@ new Popper(reference, popper, {
 
 ### <a name="writing-your-own-modifiers"></a>Écriture de vos propres modificateurs
 
-Popper. js est basé sur une architecture «de plug-in», la plupart de ses fonctionnalités sont entièrement encapsulées «modificateurs».  
+Popper. js est basé sur une architecture « de plug-in », la plupart de ses fonctionnalités sont entièrement encapsulées « modificateurs ».  
 Un modificateur est une fonction qui est appelée chaque fois que Popper. js doit calculer la position de l’Popper. Pour cette raison, les modificateurs doivent être très performants pour éviter les goulets d’étranglement.  
 
 Pour en savoir plus sur la création d’un modificateur, [consultez la documentation sur les modificateurs](docs/_includes/popper-documentation.md#modifiers--object)
@@ -146,9 +147,9 @@ Pour en savoir plus sur la création d’un modificateur, [consultez la document
 L’intégration de bibliothèques tierces dans les bibliothèques REACT ou d’autres bibliothèques peut être une douleur, car elles modifient généralement le DOM et rendent les bibliothèques fou.  
 Popper. js limite toutes les modifications apportées `applyStyle` au modèle DOM à l’intérieur du modificateur, vous pouvez simplement le désactiver et appliquer manuellement les coordonnées Popper à l’aide de votre bibliothèque de choix.  
 
-Pour obtenir la liste complète des bibliothèques qui vous permettent d’utiliser Popper. js dans des infrastructures existantes, [](/MENTIONS.md) visitez la page mentions.
+Pour obtenir la liste complète des bibliothèques qui vous permettent d’utiliser Popper. js dans des infrastructures existantes, visitez la page [mentions](/MENTIONS.md) .
 
-Vous pouvez également remplacer votre propre par votre propre `applyStyles` et intégrer Popper. js par vous-même!
+Vous pouvez également remplacer votre propre par votre propre `applyStyles` et intégrer Popper. js par vous-même !
 
 ```js
 function applyReactStyle(data) {
@@ -189,17 +190,17 @@ Cela signifie qu’elle n’entraîne aucune [Jank](https://www.chromium.org/dev
 
 L’objectif de Popper. js est de fournir un moteur de positionnement stable et puissant prêt à être utilisé dans les bibliothèques tierces.  
 
-Visitez la [](/MENTIONS.md) page des mentions pour obtenir une liste mise à jour des projets.
+Visitez la page des [mentions](/MENTIONS.md) pour obtenir une liste mise à jour des projets.
 
 
 ### <a name="credits"></a>Crédits
-Je souhaite remercier des amis et des projets pour le travail qu’il a effectué:
+Je souhaite remercier des amis et des projets pour le travail qu’il a effectué :
 
-- [@AndreaScn](https://github.com/AndreaScn) de son travail sur la page GitHub et le test manuel qu’il a fait lors du développement;
-- [@vampolo](https://github.com/vampolo) de l’idée d’origine et du nom de la bibliothèque;
-- [Sysdig](https://github.com/Draios) pour toutes les choses géniales que j’ai apprises au cours de ces années, qui m’a permis d’écrire cette bibliothèque;
-- [Attache. js](http://github.hubspot.com/tether/) pour m’avoir inspiré lors de l’écriture d’une bibliothèque de positionnement prête pour le monde réel;
-- [Les contributeurs](https://github.com/FezVrasta/popper.js/graphs/contributors) de leurs requêtes d’extraction et de bogues très appréciées;
+- [@AndreaScn](https://github.com/AndreaScn) de son travail sur la page GitHub et le test manuel qu’il a fait lors du développement ;
+- [@vampolo](https://github.com/vampolo) de l’idée d’origine et du nom de la bibliothèque ;
+- [Sysdig](https://github.com/Draios) pour toutes les choses géniales que j’ai apprises au cours de ces années, qui m’a permis d’écrire cette bibliothèque ;
+- [Attache. js](http://github.hubspot.com/tether/) pour m’avoir inspiré lors de l’écriture d’une bibliothèque de positionnement prête pour le monde réel ;
+- [Les contributeurs](https://github.com/FezVrasta/popper.js/graphs/contributors) de leurs requêtes d’extraction et de bogues très appréciées ;
 - **vous** pour l’étoile que vous allez donner à ce projet et, si vous le souhaitez, donner à ce projet une tentative🙂
 
 ### <a name="copyright-and-license"></a>Copyright et licence
